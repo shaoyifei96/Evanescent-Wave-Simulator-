@@ -7,7 +7,7 @@ Created on Sun Apr  9 22:07:40 2017
 """
 from math import floor,ceil,exp
 from numpy import ones,zeros,array,sqrt
-from pylab import show,figure,xlim,ylim,axes,plot,show,ion
+from pylab import show,figure,xlim,ylim,axes,plot,show,close,ion
 from matplotlib import animation
 ion()
 m=1
@@ -67,18 +67,23 @@ mHx=(c0*dt)/UR
 Ey=zeros(Nz)
 Hx=zeros(Nz)
 
+
 for t in range(step):
-    for nz in range(1,Nz-1):
-        Hx[nz-1]=Hx[nz-1]+mHx[nz-1]*(Ey[nz]-Ey[nz-1])/dz
+    for nz in range(Nz-1):
+        Hx[nz]=Hx[nz]+mHx[nz]*(Ey[nz+1]-Ey[nz])/dz
     Hx[Nz-1]=Hx[Nz-1]+mHx[Nz-1]*(0-Ey[Nz-1])/dz
       
     Ey[0]=Ey[0]+mEy[0]*(Hx[0]-0)/dz
-    for nz in range(2,Nz):
-        Ey[nz-1]=Ey[nz-1]+mEy[nz-1]*(Hx[nz-1]-Hx[nz-1])/dz
+    for nz in range(1,Nz):
+        Ey[nz]=Ey[nz]+mEy[nz]*(Hx[nz]-Hx[nz-1])/dz
      
     Ey[nz_src-1]=Ey[nz_src-1]+Esrc[t-1]
-    figure(1)
-    plot(range(Nz),Hx,range(Nz),Ey,ER)
-    show()
+    
+    if t%10==0:
+        
+        close()
+        figure(1)
+        plot(range(Nz),Hx,range(Nz),Ey)
+        show()
 
 
