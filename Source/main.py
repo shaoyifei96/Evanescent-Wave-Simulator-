@@ -7,9 +7,12 @@
 #different, it can cause problems
 
 #When import library or module ALWAYS import as
+#When code is in a folder use foldername.filename
 #e.g. import numpy as np
 #e.g. import plot as plt
 
+import numpy as np
+import EH.E as E_func#example of in_folder func
 print("Hello World")
 
 #setup, the following code should run once
@@ -19,9 +22,24 @@ print("Hello World")
 #
 
 
+#======TEST PURPOSE 
+Mat_e=np.zeros((2,2),float)
+Mat_e[0,0]=0.1
+Mat_e[0,1]=0.1
+Mat_e[1,0]=1
+Mat_e[1,1]=1
+E=np.zeros((2,2),float)
+E[0,0]=1
+E[0,1]=1
+E[1,0]=.1
+E[1,1]=.1
+
+D=E_func.E_to_D(E,Mat_e)
+print(D)
+#======DO NOT USE FOR FINAL
 while(True):
 	#Loop
-
+	break
 	#Update D from H
 	#Update E from D
 	#Handle E field boundary(boundary means edge, not material)
