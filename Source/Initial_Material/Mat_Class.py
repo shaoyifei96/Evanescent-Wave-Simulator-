@@ -9,8 +9,9 @@ class Mat:
 		self.col= col
 		self.e=np.full((row, col),self.e0)
 		self.mu=np.full((row, col),self.mu0)
-		self.M_Ez_Coef_Curl_Ex=-self.c0*dt/self.mu
-		self.M_Ez_Coef_Curl_Ey=self.c0*dt/self.mu
+		self.M_Ez_Coef_Ex=-self.c0*dt/self.mu
+		self.M_Ez_Coef_Ey=self.c0*dt/self.mu
+		
 
 	def add_mat_bond(self,i_lower,i_upper,j_lower,j_upper,e,mu):#add a block of 2D material
 		#This is rather complicated, will consider more

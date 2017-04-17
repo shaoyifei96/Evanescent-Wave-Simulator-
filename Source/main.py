@@ -12,7 +12,7 @@
 #e.g. import plot as plt
 
 import numpy as np
-import EH.Linear_Ops as E_func#example of in_folder func
+import EH.Linear_Ops as lin_func#example of in_folder func
 import Initial_Material.Mat_Class as mat
 import matplotlib.pyplot as plt
 print("Hello World")
@@ -40,7 +40,7 @@ E[0,1]=1
 E[1,0]=.1
 E[1,1]=.1
 
-D=E_func.E_to_D(E,Mat_e)
+D=lin_func.E_to_D(E,Mat_e)
 print(D)
 #======DO NOT USE FOR FINAL
 while(True):
