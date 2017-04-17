@@ -11,10 +11,5 @@ def M_Ez_Ez_from_Dz(Dz,Dz_coef):
 
 #Hz mode
 def M_Hz_D_from_E(E,Mat_e):
-	D=E#this has pointer problem, be careful #edit
-	r,c=np.shape(E)
-	for i in range (0,r):
-		for j in range (0,c):
-			D[i,j]=E[i,j]*Mat_e[i,j]
 
-	return D
+	return E

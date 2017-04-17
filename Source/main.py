@@ -22,8 +22,8 @@ print("Hello World")
 dt=0.5
 dx=0.1
 dy=0.1
-Nx=4
-Ny=4
+Nx=8
+Ny=8
 #setup, the following code should run once
 #Set Initial Conditions
 #Set Material Property
