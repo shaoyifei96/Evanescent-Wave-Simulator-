@@ -22,20 +22,25 @@ print("Hello World")
 dt=0.5
 dx=0.1
 dy=0.1
+#set up the size of the map
+L=10
+W=10
+#set the size of a single grid
+l=1
 #setup, the following code should run once
 #Set Initial Conditions
 #Set Material Property
 #
 #
 #==================TEST for material class, you can add a block of material in 2d
-Mat_map=mat.Mat(10,10,dt)
+Mat_map=mat.Mat(L,W,dt)
 Mat_map.add_mat_bond(0,2,0,2,1.2,1)#(i_i,i_f,j_i,j_f,e,mu)
 print("mat=",Mat_map.e)
 #==================
 
 #======TEST PURPOSE 
 
-Ex=np.zeros((10,10),float)
+Ex=np.zeros((L,W),float)
 r,c=np.shape(Ex)
 Ex[0:r,0:c]=0
 
@@ -75,14 +80,14 @@ while(True):
 
 grids=[]
 
-for i in range(M):
-	for j in range(N):
-		grids.append(box(pos=vector(2*L*i,2*L*j,2*L*0), length=L, height=L, width=0,color=vector(Ex,Hy,0)))
+for i in range(L):
+	for j in range(W):
+		grids.append(box(pos=vector(2*l*i,2*l*j,2*l*0), length=l, height=l, width=0,color=vector(Ex,Hy,0)))
 	
 
 def updates(grids):
-	for i in range(M):
-		for j in range(N):
+	for i in range(L):
+		for j in range(W):
 			grids[i,j].color= vector(Ex,Hy,0)
 
 
