@@ -13,6 +13,8 @@
 
 import numpy as np
 import EH.E as E_func#example of in_folder func
+import Initial_Material.Mat_Class as mat
+import matplotlib.pyplot as plt
 print("Hello World")
 
 #setup, the following code should run once
@@ -20,7 +22,11 @@ print("Hello World")
 #Set Material Property
 #
 #
-
+#==================TEST for material class, you can add a block of material in 2d
+Mat_map=mat.Mat(100,100)
+Mat_map.add_mat_bond(0,2,0,2,1.2,1)#(i_i,i_f,j_i,j_f,e,mu)
+print(Mat_map.e)
+#==================
 
 #======TEST PURPOSE 
 Mat_e=np.zeros((2,2),float)
