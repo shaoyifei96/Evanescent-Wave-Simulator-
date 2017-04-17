@@ -3,7 +3,7 @@ import numpy as np
 def M_Ez_Hx_update(Hx,CEx,CEx_coeff):
 	return Hx+CEx_coeff*CEx
 def M_Ez_Hz_update(Hy,CEy,CEy_coeff):
-	return Hy+CEy_coeff*CEx
+	return Hy+CEy_coeff*CEy
 def M_Ez_Dz_update(Dz,CHz,CHz_coeff):
 	return Dz+CHz_coeff*CHz
 def M_Ez_Ez_from_Dz(Dz,Dz_coef):

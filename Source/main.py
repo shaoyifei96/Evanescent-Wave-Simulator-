@@ -13,10 +13,14 @@
 
 import numpy as np
 import EH.Linear_Ops as lin_func#example of in_folder func
+import EH.Curl as cr
 import Initial_Material.Mat_Class as mat
+import copy as cp
 import matplotlib.pyplot as plt
 print("Hello World")
 dt=0.001
+dx=0.1
+dy=0.1
 #setup, the following code should run once
 #Set Initial Conditions
 #Set Material Property
@@ -29,21 +33,25 @@ print(Mat_map.e)
 #==================
 
 #======TEST PURPOSE 
-Mat_e=np.zeros((2,2),float)
-Mat_e[0,0]=0.1
-Mat_e[0,1]=0.1
-Mat_e[1,0]=1
-Mat_e[1,1]=1
-E=np.zeros((2,2),float)
-E[0,0]=1
-E[0,1]=1
-E[1,0]=.1
-E[1,1]=.1
 
-D=lin_func.E_to_D(E,Mat_e)
-print(D)
+Ex=np.zeros((10,10),float)
+r,c=np.shape(Ex)
+Ex[0:r,0:c]=0
+
+Ex=np.zeros((2,2),float)
+Ex[0,0]=0
+Ex[0,1]=0
+Ex[1,0]=0
+Ex[1,1]=0
+
+Ez=cp.deepcopy(Ex)
+
+
+
 #======DO NOT USE FOR FINAL
 while(True):
+	cr.M_Ez_Curl_Ex(Ez,dy)
+
 	#Loop
 	break
 	#Update D from H
