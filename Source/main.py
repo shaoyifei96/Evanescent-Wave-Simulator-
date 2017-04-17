@@ -17,27 +17,39 @@ import EH.Curl as cr
 import Initial_Material.Mat_Class as mat
 import copy as cp
 import matplotlib.pyplot as plt
+import vpython as vp
 import time as tm
 print("Hello World")
+
 dt=0.5
 dx=0.1
 dy=0.1
-Nx=8
-Ny=8
+
+
+#set up the size of the map
+L=10
+W=10
+#set the size of a single grid
+l=1
+
 #setup, the following code should run once
 #Set Initial Conditions
 #Set Material Property
 #
 #
 #==================TEST for material class, you can add a block of material in 2d
-Mat_map=mat.Mat(Nx,Ny,dt)
+
+Mat_map=mat.Mat(L,W,dt)
+
 Mat_map.add_mat_bond(0,2,0,2,1.2,1)#(i_i,i_f,j_i,j_f,e,mu)
 print("mat=",Mat_map.e)
 #==================
 
 #======TEST PURPOSE 
 
-Ex=np.zeros((Nx,Ny),float)
+
+Ex=np.zeros((L,W),float)
+
 r,c=np.shape(Ex)
 Ex[0:r,0:c]=0
 
@@ -80,6 +92,18 @@ while(n<100):
 	#Simulate
 
 
+
+grids=[]
+
+for i in range(L):
+	for j in range(W):
+		grids.append(box(pos=vector(2*l*i,2*l*j,2*l*0), length=l, height=l, width=0,color=vector(Ex,Hy,0)))
+	
+
+def updates(grids):
+	for i in range(L):
+		for j in range(W):
+			grids[i,j].color= vector(Ex,Hy,0)
 
 
 

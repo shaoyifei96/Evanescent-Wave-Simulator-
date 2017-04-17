@@ -7,8 +7,21 @@ Created on Sun Apr  9 22:07:40 2017
 """
 from math import floor,ceil,exp
 from numpy import ones,zeros,array,sqrt
-from pylab import show,figure,xlim,ylim,axes,plot,show,close,ion
+from pylab import show,figure,xlim,ylim,axes,plot,show,draw
 from matplotlib import animation
+<<<<<<< Updated upstream
+=======
+from time import sleep
+    
+    
+m=1
+cm=1e-2*m
+mm=1e-3*m
+inch=2.54*cm
+ft=12*inch
+s=1
+hz=1/s
+>>>>>>> Stashed changes
 
 
 m=1.0
@@ -70,6 +83,7 @@ Hx=zeros(Nz)
 Hx[40]=14
 
 
+fig=figure(1)
 for t in range(step):
 
     for nz in range(Nz-1):
@@ -82,12 +96,9 @@ for t in range(step):
      
     Ey[nz_src-1]=Ey[nz_src-1]+Esrc[t-1]
     
-    if t%10==0:
-        
-        close()
-        figure(1)
-        plot(range(Nz),Hx,range(Nz),Ey)
-        show()
+    
+    plot(range(Nz),Hx,range(Nz),Ey)
+    show()
 
 
 
