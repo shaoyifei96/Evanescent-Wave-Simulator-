@@ -17,6 +17,7 @@ import EH.Curl as cr
 import Initial_Material.Mat_Class as mat
 import copy as cp
 import matplotlib.pyplot as plt
+import vpython as vp
 print("Hello World")
 dt=0.5
 dx=0.1
@@ -71,6 +72,18 @@ while(True):
 	#Simulate
 
 
+
+grids=[]
+
+for i in range(M):
+	for j in range(N):
+		grids.append(box(pos=vector(2*L*i,2*L*j,2*L*0), length=L, height=L, width=0,color=vector(Ex,Hy,0)))
+	
+
+def updates(grids):
+	for i in range(M):
+		for j in range(N):
+			grids[i,j].color= vector(Ex,Hy,0)
 
 
 
