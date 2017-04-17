@@ -73,12 +73,12 @@ Hx[40]=14
 for t in range(step):
 
     for nz in range(Nz-1):
-        Hx[nz]=Hx[nz]+mHx[nz]*(Ey[nz+1]-Ey[nz])/dz
+        Hx[nz]=Hx[nz]+mHx[nz]*(Ey[nz+1]-Ey[nz])/dz#general case
     Hx[Nz-1]=Hx[Nz-1]+mHx[Nz-1]*(0-Ey[Nz-1])/dz
       
     Ey[0]=Ey[0]+mEy[0]*(Hx[0]-0)/dz
     for nz in range(1,Nz):
-        Ey[nz]=Ey[nz]+mEy[nz]*(Hx[nz]-Hx[nz-1])/dz
+        Ey[nz]=Ey[nz]+mEy[nz]*(Hx[nz]-Hx[nz-1])/dz#general case
      
     Ey[nz_src-1]=Ey[nz_src-1]+Esrc[t-1]
     
