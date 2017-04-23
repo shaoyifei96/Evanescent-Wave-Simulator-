@@ -64,6 +64,8 @@ Ez[0,0]=1
 #======DO NOT USE FOR FINAL
 n=0
 while(n<100):
+
+	
 	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
 	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
 	Hx=lin_func.M_Ez_Hx_update(Hx,CEx,Mat_map.M_Ez_Coef_Ex)
@@ -95,15 +97,19 @@ while(n<100):
 
 grids=[]
 
+
 for i in range(L):
+	line=[]
 	for j in range(W):
-		grids.append(box(pos=vector(2*l*i,2*l*j,2*l*0), length=l, height=l, width=0,color=vector(Ex,Hy,0)))
+		line.append(box(pos=vector(l*i,l*j,l*0), length=l, height=l, width=0,color=vector(Ex,Hy,0)))
+	grids.append(line)
 	
 
 def updates(grids):
 	for i in range(L):
+		line=grids[i]
 		for j in range(W):
-			grids[i,j].color= vector(Ex,Hy,0)
+			line[j].color= vector(Ex,Hy,0)
 
 
 
