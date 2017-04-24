@@ -28,8 +28,12 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import time as tm
 
+Mat_map=mat.Mat(L,W,dt)
 
-dt=5e-17
+Mat_map.add_mat_bond(0,int(L),int(W/2)-1,int(W/2),9.654187817e-12,1.2566370614e-6)#(i_i,i_f,j_i,j_f,e,mu)
+
+dt=(Mat_map.e0*Mat_map.mu0)**(1/2)/Mat_map.c0/2
+   
 dx=1
 dy=1
 
@@ -47,9 +51,7 @@ l=1
 #
 #==================TEST for material class, you can add a block of material in 2d
 
-Mat_map=mat.Mat(L,W,dt)
 
-Mat_map.add_mat_bond(0,int(L/2),0,int(W/2),9.254187817e-12,1.2566370614e-6)#(i_i,i_f,j_i,j_f,e,mu)
 #print("mat=",Mat_map.e)
 #==================
 
@@ -67,7 +69,7 @@ Hx=cp.deepcopy(Ex)
 Hy=cp.deepcopy(Ex)
 Dz=cp.deepcopy(Ex)
 #inital condition
-Hy[int(L/2),int(W/2)]=.1
+Hy[int(L/2),int(W/2)+2]=.1
 
 
 
@@ -81,16 +83,16 @@ plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
   
 #======DO NOT USE FOR FINAL
 n=0
-<<<<<<< Updated upstream
+# <<<<<<< Updated upstream
 ims=[]
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-while(n<100):
-=======
+# <<<<<<< HEAD
+# =======
+# >>>>>>> Stashed changes
+# while(n<100):
+# =======
 
-while(n<120):
->>>>>>> origin/master
+while(n<300):
+# >>>>>>> origin/master
 
 	print(n)
 	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
@@ -126,7 +128,7 @@ while(n<120):
 
 	#Record Some Data
 	#Simulate
-ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True,
+ani = animation.ArtistAnimation(fig, ims, interval=40, blit=True,
                                 repeat_delay=0)
 
 plt.show()
