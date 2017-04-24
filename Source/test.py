@@ -31,9 +31,11 @@ import time as tm
 Mat_map=mat.Mat(L,W,dt)
 
 Mat_map.add_mat_bond(0,int(L),int(W/2)-1,int(W/2),9.654187817e-12,1.2566370614e-6)#(i_i,i_f,j_i,j_f,e,mu)
+Mat_map.add_mat_bond(int(L/2)+1,int(L/2)+8,0,int(W),9.654187817e-12,1.2566370614e-6)#(i_i,i_f,j_i,j_f,e,mu)
 
-dt=(Mat_map.e0*Mat_map.mu0)**(1/2)/Mat_map.c0/2
-   
+
+
+dt=(Mat_map.e0*Mat_map.mu0)**(1/2)/Mat_map.c0/5   
 dx=1
 dy=1
 
@@ -79,7 +81,8 @@ fig = plt.figure()        # Create a figure
 scale = 10          # Typical scale of wave (higher values are clipped)
 plt.gca().axes.get_xaxis().set_ticks([])  # Turn off x axis ticks
 plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
-
+plt.imshow(Hy)
+#plt.colorbar()
   
 #======DO NOT USE FOR FINAL
 n=0
@@ -91,7 +94,7 @@ ims=[]
 # while(n<100):
 # =======
 
-while(n<300):
+while(n<800):
 # >>>>>>> origin/master
 
 	print(n)
@@ -109,7 +112,9 @@ while(n<300):
 
 	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
 	#print("Ez=",Ez)
-	im=plt.imshow(Ez, animated=True,interpolation="none")
+	im=plt.imshow(Ez, animated=True,interpolation="bicubic")
+	plt.hsv()
+	#plt.colorbar()
 	ims.append([im])
 	#np.savetxt("Ez10.csv", Ez, delimiter=",")
 	n=n+1
@@ -128,7 +133,7 @@ while(n<300):
 
 	#Record Some Data
 	#Simulate
-ani = animation.ArtistAnimation(fig, ims, interval=40, blit=True,
+ani = animation.ArtistAnimation(fig, ims, interval=30, blit=True,
                                 repeat_delay=0)
 
 plt.show()
