@@ -35,8 +35,8 @@ dy=0.1
 
 
 #set up the size of the map
-L=10
-W=10
+L=100
+W=100
 #set the size of a single grid
 l=1
 
@@ -81,7 +81,10 @@ plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
   
 #======DO NOT USE FOR FINAL
 n=0
+<<<<<<< Updated upstream
 ims=[]
+=======
+>>>>>>> Stashed changes
 while(n<100):
 
 	print(n)
