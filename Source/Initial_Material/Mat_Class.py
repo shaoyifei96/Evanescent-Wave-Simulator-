@@ -3,7 +3,7 @@ class Mat:
 	def __init__(self, row, col, dt):
 		self.e0=8.854187817e-12
 		self.mu0=1.2566370614e-6
-		self.c0=299792458.0
+		self.c0=299792458.0#wrong number for not explode
 		self.dt=dt
 		self.row= row
 		self.col= col
