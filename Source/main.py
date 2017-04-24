@@ -10,16 +10,18 @@
 #When code is in a folder use foldername.filename
 #e.g. import numpy as np
 #e.g. import plot as plt
-
+import simpy as sp
 import numpy as np
 import EH.Linear_Ops as lin_func#example of in_folder func
 import EH.Curl as cr
 import Initial_Material.Mat_Class as mat
 import copy as cp
 import matplotlib.pyplot as plt
-import vpython as vp
+#import vpython as vp
 import time as tm
 print("Hello World")
+
+
 
 dt=0.5
 dx=0.1

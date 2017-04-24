@@ -25,7 +25,7 @@ import EH.Curl as cr
 import Initial_Material.Mat_Class as mat
 import copy as cp
 import matplotlib.pyplot as plt
-
+import matplotlib.animation as animation
 import time as tm
 
 
@@ -67,7 +67,7 @@ Hx=cp.deepcopy(Ex)
 Hy=cp.deepcopy(Ex)
 Dz=cp.deepcopy(Ex)
 #inital condition
-Ez[0,0]=1
+Ez[int(L/2),int(W/2)]=1
   
 
 
@@ -75,14 +75,14 @@ Ez[0,0]=1
 
 fig = plt.figure()        # Create a figure
 scale = 10          # Typical scale of wave (higher values are clipped)
-s = plt.imshow(Ez)
 plt.gca().axes.get_xaxis().set_ticks([])  # Turn off x axis ticks
 plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
-  
+
   
 #======DO NOT USE FOR FINAL
 n=0
-while(n<10):
+ims=[]
+while(n<100):
 
 	print(n)
 	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
@@ -94,10 +94,10 @@ while(n<10):
 	#add in source here
 	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
 	print("Ez=",Ez)
-	s.set_data(Ez)
-	plt.draw()
+	im=plt.imshow(Ez, animated=True)
+	ims.append([im])
 	n=n+1
-	tm.sleep(1)
+
 
 
 	#Update D from H
@@ -112,7 +112,10 @@ while(n<10):
 
 	#Record Some Data
 	#Simulate
+ani = animation.ArtistAnimation(fig, ims, interval=100, blit=True,
+                                repeat_delay=0)
 
+plt.show()
 
 
 
