@@ -43,12 +43,12 @@ c0=299792458.0#wrong number for not explode
 
 e1=9.654187817e-12#different material
 
-dt = 1.6e-10
+dt = 1.6e-6
 # dt=(e1*mu0)**(1/2)*L/c0/2#originally 2 in the denominator changed to 5
   
 Mat_map=mat.Mat(L,W,dt)
-Mat_map.add_mat_bond(0,int(L),int(W/2)-1,int(W/2),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
-Mat_map.add_mat_bond(int(L/2)+1,int(L/2)+8,0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
+#Mat_map.add_mat_bond(0,int(L),int(W/2)-1,int(W/2),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
+#Mat_map.add_mat_bond(int(L/2)+1,int(L/2)+8,0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
 
 # dx=1e-6
 # dy=1e-6
@@ -82,13 +82,11 @@ t=np.array(range(step-1))*dt
 
 
 
-nx_src=np.floor(W/2)
-ny_src=np.floor(L/2)
+nx_src=int(np.floor(W/2))
+ny_src=int(np.floor(L/2))
 Dsrc=[]
 for i in range(len(t)):  
     Dsrc.append(ma.exp(-((t[i]-t0)/tau)**2))
-
-
 
 
 #setup, the following code should run once
@@ -131,14 +129,28 @@ im_mat=ax1.plot(x,y)
 
 
 
+<<<<<<< Updated upstream
 plt.subplot(1,2,2)
+scale = 10          # Typical scale of wave (higher values are clipped)
+=======
+
+fig = plt.figure()      # Create a figure
 scale = 10          # Typical scale of wave (higher values are clipped)
 plt.gca().axes.get_xaxis().set_ticks([])  # Turn off x axis ticks
 plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
-plt.imshow(Hy)
+plt.imshow(Ez)
+
+plt.subplot(1,2,2)       # Typical scale of wave (higher values are clipped)
+>>>>>>> Stashed changes
+plt.gca().axes.get_xaxis().set_ticks([])  # Turn off x axis ticks
+plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
+plt.imshow(Ez)
 
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 #plt.colorbar()
   
 #======DO NOT USE FOR FINAL
@@ -150,6 +162,7 @@ ims=[]
 # >>>>>>> Stashed changes
 # while(n<100):
 # =======
+<<<<<<< Updated upstream
 X = range(L)
 Y = range(W)
 X, Y = np.meshgrid(X, Y)
@@ -157,6 +170,9 @@ X, Y = np.meshgrid(X, Y)
 for t in range(step) :
 
 
+=======
+for t in range(step) :
+>>>>>>> Stashed changes
 	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
 	#print(CEx)
 	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
@@ -173,8 +189,12 @@ for t in range(step) :
 	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
 	#print("Ez=",Ez)
 
+<<<<<<< Updated upstream
 	im=plt.imshow(Ez, animated=True,origin='lower',interpolation="bicubic",norm=clr.Normalize())
 
+=======
+	im=plt.imshow(Ez, animated=True,interpolation="bicubic")
+>>>>>>> Stashed changes
 	plt.hsv()
 
 	#im=Axes3D.plot_surface(X=X, Y=Y, Z=Ez,rstride=1, cstride=1)
