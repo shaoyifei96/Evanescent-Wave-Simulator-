@@ -25,8 +25,10 @@ class Mat:
 		return
 		
 	
-	def add_mat_bond_advanced(f):
-		return
+	def add_mat_bond_advanced(self,f,i_lower,i_upper,e,mu):
+		for i in range (i_lower,i_upper):
+			j_upper =int(f(i))
+			self.add_mat_bond(i,i+1,0,j_upper,e,mu)
 
 			
 			
