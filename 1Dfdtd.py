@@ -9,8 +9,7 @@ from math import floor,ceil,exp
 from numpy import ones,zeros,array,sqrt
 from pylab import show,figure,xlim,ylim,axes,plot,show,draw
 from matplotlib import animation
-<<<<<<< Updated upstream
-=======
+
 from time import sleep
     
     
@@ -21,12 +20,11 @@ inch=2.54*cm
 ft=12*inch
 s=1
 hz=1/s
->>>>>>> Stashed changes
 
 
 m=1.0
 
-ion()
+
 
 cm=1e-2*m
 mm=1e-3*m
@@ -78,11 +76,11 @@ mEy=(c0*dt)/ER
 mHx=(c0*dt)/UR
 
 Ey=zeros(Nz)
-Ey[40]=40
+
 Hx=zeros(Nz)
-Hx[40]=14
 
 
+ims=[]
 fig=figure(1)
 for t in range(step):
 
@@ -97,8 +95,13 @@ for t in range(step):
     Ey[nz_src-1]=Ey[nz_src-1]+Esrc[t-1]
     
     
-    plot(range(Nz),Hx,range(Nz),Ey)
-    show()
+    im=plot(range(Nz),Hx,range(Nz),Ey)
+    ims.append(im)
+    
+ani = animation.ArtistAnimation(fig, ims, interval=10, blit=False,
+                                repeat_delay=100)
+animation.Animation.save("1dfttd.mp4",writer="ffmpeg")
+show()
 
 
 

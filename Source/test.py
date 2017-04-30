@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Apr 23 19:32:16 2017
+
+@author: wangleo
+"""
+
 #The code should be developed from big picture to specific
 #steps, therefore we put files in folders, this main 
 #should not be edited, main is based on YOUTUBE:
@@ -10,27 +18,25 @@
 #When code is in a folder use foldername.filename
 #e.g. import numpy as np
 #e.g. import plot as plt
-import simpy as sp
+
 import numpy as np
 import EH.Linear_Ops as lin_func#example of in_folder func
 import EH.Curl as cr
 import Initial_Material.Mat_Class as mat
 import copy as cp
 import matplotlib.pyplot as plt
-#import vpython as vp
+import matplotlib.animation as animation
 import time as tm
-print("Hello World")
 
 
-
-dt=0.5
-dx=0.1
-dy=0.1
+dt=5e-17
+dx=1
+dy=1
 
 
 #set up the size of the map
-L=10
-W=10
+L=100
+W=100
 #set the size of a single grid
 l=1
 
@@ -43,8 +49,8 @@ l=1
 
 Mat_map=mat.Mat(L,W,dt)
 
-Mat_map.add_mat_bond(0,2,0,2,1.2,1)#(i_i,i_f,j_i,j_f,e,mu)
-print("mat=",Mat_map.e)
+Mat_map.add_mat_bond(0,int(L/2),0,int(W/2),9.254187817e-12,1.2566370614e-6)#(i_i,i_f,j_i,j_f,e,mu)
+#print("mat=",Mat_map.e)
 #==================
 
 #======TEST PURPOSE 
@@ -61,25 +67,46 @@ Hx=cp.deepcopy(Ex)
 Hy=cp.deepcopy(Ex)
 Dz=cp.deepcopy(Ex)
 #inital condition
-Ez[0,0]=1
+Hy[int(L/2),int(W/2)]=.1
 
+
+
+
+
+fig = plt.figure()        # Create a figure
+scale = 10          # Typical scale of wave (higher values are clipped)
+plt.gca().axes.get_xaxis().set_ticks([])  # Turn off x axis ticks
+plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
+
+  
 #======DO NOT USE FOR FINAL
 n=0
+
+ims=[]
+
+
 while(n<100):
 
-	
+	print(n)
 	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
+	#print(CEx)
 	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
+	#print(CEy)
 	Hx=lin_func.M_Ez_Hx_update(Hx,CEx,Mat_map.M_Ez_Coef_Ex)
+	#print(Hx)
 	Hy=lin_func.M_Ez_Hy_update(Hy,CEy,Mat_map.M_Ez_Coef_Ey)
+	#print(Hy)
 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
 	Dz=lin_func.M_Ez_Dz_update(Dz,CHz,Mat_map.M_Ez_Coef_Hz)
 	#add in source here
-	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
-	print("Ez=",Ez)
 
+	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
+	#print("Ez=",Ez)
+	im=plt.imshow(Ez, animated=True,interpolation="none")
+	ims.append([im])
+	#np.savetxt("Ez10.csv", Ez, delimiter=",")
 	n=n+1
-	tm.sleep(3)
+
 
 
 	#Update D from H
@@ -94,24 +121,13 @@ while(n<100):
 
 	#Record Some Data
 	#Simulate
+ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True,
+                                repeat_delay=0)
+
+plt.show()
 
 
 
-grids=[]
-
-
-for i in range(L):
-	line=[]
-	for j in range(W):
-		line.append(box(pos=vector(l*i,l*j,l*0), length=l, height=l, width=0,color=vector(Ex,Hy,0)))
-	grids.append(line)
-	
-
-def updates(grids):
-	for i in range(L):
-		line=grids[i]
-		for j in range(W):
-			line[j].color= vector(Ex,Hy,0)
 
 
 
