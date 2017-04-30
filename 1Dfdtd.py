@@ -69,8 +69,9 @@ nz_src=floor(Nz/2)
 Esrc=[]
 for i in range(len(t)):  
     Esrc.append(exp(-((t[i]-t0)/tau)**2))
+fig=figure(2)
 
-#plot(t,Esrc)
+plot(t,Esrc)
 
 mEy=(c0*dt)/ER
 mHx=(c0*dt)/UR
@@ -81,7 +82,7 @@ Hx=zeros(Nz)
 
 
 ims=[]
-fig=figure(1)
+fig=figure(2)
 for t in range(step):
 
     for nz in range(Nz-1):
@@ -100,7 +101,7 @@ for t in range(step):
     
 ani = animation.ArtistAnimation(fig, ims, interval=10, blit=False,
                                 repeat_delay=100)
-animation.Animation.save("1dfttd.mp4",writer="ffmpeg")
+
 show()
 
 
