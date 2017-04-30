@@ -126,31 +126,17 @@ for x_now in x:
     y.append(myfunction(x_now))
 im_mat=ax1.plot(x,y)
 
-
-
-
-<<<<<<< Updated upstream
 plt.subplot(1,2,2)
-scale = 10          # Typical scale of wave (higher values are clipped)
-=======
-
-fig = plt.figure()      # Create a figure
-scale = 10          # Typical scale of wave (higher values are clipped)
+      # Create a figure
 plt.gca().axes.get_xaxis().set_ticks([])  # Turn off x axis ticks
 plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
 plt.imshow(Ez)
 
-plt.subplot(1,2,2)       # Typical scale of wave (higher values are clipped)
->>>>>>> Stashed changes
-plt.gca().axes.get_xaxis().set_ticks([])  # Turn off x axis ticks
-plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
-plt.imshow(Ez)
+     # Typical scale of wave (higher values are clipped)
 
 
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
+
 #plt.colorbar()
   
 #======DO NOT USE FOR FINAL
@@ -162,17 +148,9 @@ ims=[]
 # >>>>>>> Stashed changes
 # while(n<100):
 # =======
-<<<<<<< Updated upstream
-X = range(L)
-Y = range(W)
-X, Y = np.meshgrid(X, Y)
 
 for t in range(step) :
 
-
-=======
-for t in range(step) :
->>>>>>> Stashed changes
 	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
 	#print(CEx)
 	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
@@ -189,12 +167,10 @@ for t in range(step) :
 	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
 	#print("Ez=",Ez)
 
-<<<<<<< Updated upstream
+
 	im=plt.imshow(Ez, animated=True,origin='lower',interpolation="bicubic",norm=clr.Normalize())
 
-=======
-	im=plt.imshow(Ez, animated=True,interpolation="bicubic")
->>>>>>> Stashed changes
+
 	plt.hsv()
 
 	#im=Axes3D.plot_surface(X=X, Y=Y, Z=Ez,rstride=1, cstride=1)
