@@ -105,12 +105,26 @@ Hy=cp.deepcopy(Ex)
 Dz=cp.deepcopy(Ex)
 #inital condition
 
+fig =plt.figure(1)      # Create a figure
+ax1=plt.subplot(1,2,1)
+ax1.set_aspect('equal')
+ax1.plot(range(40))
 
+<<<<<<< HEAD
 fig = plt.figure()      # Create a figure
 scale = 10          # Typical scale of wave (higher values are clipped)
 plt.gca().axes.get_xaxis().set_ticks([])  # Turn off x axis ticks
 plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
 plt.imshow(Ez)
+=======
+plt.subplot(1,2,2)
+scale = 10          # Typical scale of wave (higher values are clipped)
+plt.gca().axes.get_xaxis().set_ticks([])  # Turn off x axis ticks
+plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
+plt.imshow(Hy)
+
+
+>>>>>>> origin/master
 #plt.colorbar()
   
 #======DO NOT USE FOR FINAL
@@ -127,6 +141,11 @@ Y = range(W)
 X, Y = np.meshgrid(X, Y)
 for t in range(step) :
 
+<<<<<<< HEAD
+=======
+
+while(n<100):
+>>>>>>> origin/master
 
 
 	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
@@ -144,11 +163,17 @@ for t in range(step) :
     
 	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
 	#print("Ez=",Ez)
+<<<<<<< HEAD
 
 
 
 	im=plt.imshow(Ez, animated=True,interpolation="bicubic")
 	#plt.hsv()
+=======
+	im=plt.imshow(Ez, animated=True,interpolation="bicubic")
+	plt.hsv()
+
+>>>>>>> origin/master
 	#im=Axes3D.plot_surface(X=X, Y=Y, Z=Ez,rstride=1, cstride=1)
 	#plt.colorbar()
 	ims.append([im])
@@ -169,10 +194,12 @@ for t in range(step) :
 
 	#Record Some Data
 	#Simulate
+
 ani = animation.ArtistAnimation(fig, ims, interval=30, blit=True,
                                 repeat_delay=0)
 
 plt.show()
+
 
 
 
