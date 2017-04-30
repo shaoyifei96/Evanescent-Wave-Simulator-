@@ -27,7 +27,20 @@ import copy as cp
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import time as tm
+from mpl_toolkits.mplot3d import Axes3D
 
+#set up the size of the map
+L=100
+W=100
+#set the size of a single grid
+l=1
+
+e0=8.854187817e-12
+mu0=1.2566370614e-6
+c0=299792458.0#wrong number for not explode
+
+dt=(e0*mu0)**(1/2)/c0/5#originally 2 in the denominator changed to 5
+  
 Mat_map=mat.Mat(L,W,dt)
 
 Mat_map.add_mat_bond(0,int(L),int(W/2)-1,int(W/2),9.654187817e-12,1.2566370614e-6)#(i_i,i_f,j_i,j_f,e,mu)
@@ -35,16 +48,11 @@ Mat_map.add_mat_bond(int(L/2)+1,int(L/2)+8,0,int(W),9.654187817e-12,1.2566370614
 
 
 
-dt=(Mat_map.e0*Mat_map.mu0)**(1/2)/Mat_map.c0/5   
+ 
 dx=1
 dy=1
 
 
-#set up the size of the map
-L=100
-W=100
-#set the size of a single grid
-l=1
 
 #setup, the following code should run once
 #Set Initial Conditions
@@ -77,7 +85,7 @@ Hy[int(L/2),int(W/2)+2]=.1
 
 
 
-fig = plt.figure()        # Create a figure
+fig = Axes3D(plt.figure())        # Create a figure
 scale = 10          # Typical scale of wave (higher values are clipped)
 plt.gca().axes.get_xaxis().set_ticks([])  # Turn off x axis ticks
 plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
@@ -94,6 +102,9 @@ ims=[]
 # >>>>>>> Stashed changes
 # while(n<100):
 # =======
+X = range(L)
+Y = range(W)
+X, Y = np.meshgrid(X, Y)
 
 while(n<800):
 
@@ -113,8 +124,9 @@ while(n<800):
 
 	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
 	#print("Ez=",Ez)
-	im=plt.imshow(Ez, animated=True,interpolation="bicubic")
-	plt.hsv()
+	# im=plt.imshow(Ez, animated=True,interpolation="bicubic")
+	# plt.hsv()
+	im=Axes3D.plot_surface(X=X, Y=Y, Z=Ez,rstride=1, cstride=1)
 	#plt.colorbar()
 	ims.append([im])
 	#np.savetxt("Ez10.csv", Ez, delimiter=",")
