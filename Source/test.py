@@ -28,8 +28,14 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import time as tm
 
+Mat_map=mat.Mat(L,W,dt)
 
-dt=5e-17
+Mat_map.add_mat_bond(0,int(L),int(W/2)-1,int(W/2),9.654187817e-12,1.2566370614e-6)#(i_i,i_f,j_i,j_f,e,mu)
+Mat_map.add_mat_bond(int(L/2)+1,int(L/2)+8,0,int(W),9.654187817e-12,1.2566370614e-6)#(i_i,i_f,j_i,j_f,e,mu)
+
+
+
+dt=(Mat_map.e0*Mat_map.mu0)**(1/2)/Mat_map.c0/5   
 dx=1
 dy=1
 
@@ -47,9 +53,7 @@ l=1
 #
 #==================TEST for material class, you can add a block of material in 2d
 
-Mat_map=mat.Mat(L,W,dt)
 
-Mat_map.add_mat_bond(0,int(L/2),0,int(W/2),9.254187817e-12,1.2566370614e-6)#(i_i,i_f,j_i,j_f,e,mu)
 #print("mat=",Mat_map.e)
 #==================
 
@@ -67,7 +71,7 @@ Hx=cp.deepcopy(Ex)
 Hy=cp.deepcopy(Ex)
 Dz=cp.deepcopy(Ex)
 #inital condition
-Hy[int(L/2),int(W/2)]=.1
+Hy[int(L/2),int(W/2)+2]=.1
 
 
 
@@ -77,15 +81,22 @@ fig = plt.figure()        # Create a figure
 scale = 10          # Typical scale of wave (higher values are clipped)
 plt.gca().axes.get_xaxis().set_ticks([])  # Turn off x axis ticks
 plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
-
+plt.imshow(Hy)
+#plt.colorbar()
   
 #======DO NOT USE FOR FINAL
 n=0
 
+# <<<<<<< Updated upstream
 ims=[]
+# <<<<<<< HEAD
+# =======
+# >>>>>>> Stashed changes
+# while(n<100):
+# =======
 
+while(n<800):
 
-while(n<100):
 
 	print(n)
 	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
@@ -102,7 +113,9 @@ while(n<100):
 
 	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
 	#print("Ez=",Ez)
-	im=plt.imshow(Ez, animated=True,interpolation="none")
+	im=plt.imshow(Ez, animated=True,interpolation="bicubic")
+	plt.hsv()
+	#plt.colorbar()
 	ims.append([im])
 	#np.savetxt("Ez10.csv", Ez, delimiter=",")
 	n=n+1
@@ -121,7 +134,7 @@ while(n<100):
 
 	#Record Some Data
 	#Simulate
-ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True,
+ani = animation.ArtistAnimation(fig, ims, interval=30, blit=True,
                                 repeat_delay=0)
 
 plt.show()
