@@ -22,9 +22,11 @@ class Mat:
 		self.M_Ez_Coef_Ex[i_lower:i_upper,j_lower:j_upper]=-self.c0*self.dt/self.mu[i_lower:i_upper,j_lower:j_upper]
 		self.M_Ez_Coef_Ey[i_lower:i_upper,j_lower:j_upper]=self.c0*self.dt/self.mu[i_lower:i_upper,j_lower:j_upper]
 		self.M_Ez_Coef_Dz[i_lower:i_upper,j_lower:j_upper]=1/self.e[i_lower:i_upper,j_lower:j_upper]
+		return
 		
-
-
+	
+	def add_mat_bond_advanced(f):
+		return
 
 			
 			
