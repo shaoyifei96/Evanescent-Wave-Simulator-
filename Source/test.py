@@ -18,7 +18,7 @@ Created on Sun Apr 23 19:32:16 2017
 #When code is in a folder use foldername.filename
 #e.g. import numpy as np
 #e.g. import plot as plt
-
+import math as ma
 import numpy as np
 import EH.Linear_Ops as lin_func#example of in_folder func
 import EH.Curl as cr
@@ -33,24 +33,49 @@ from mpl_toolkits.mplot3d import Axes3D
 L=100
 W=100
 #set the size of a single grid
-l=1
+# l=1
 
 e0=8.854187817e-12
 mu0=1.2566370614e-6
 c0=299792458.0#wrong number for not explode
 
-dt=(e0*mu0)**(1/2)*L/c0/2#originally 2 in the denominator changed to 5
+e1=9.654187817e-12#different material
+
+dt = 1.6e-10
+# dt=(e1*mu0)**(1/2)*L/c0/2#originally 2 in the denominator changed to 5
   
 Mat_map=mat.Mat(L,W,dt)
+Mat_map.add_mat_bond(0,int(L),int(W/2)-1,int(W/2),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
+Mat_map.add_mat_bond(int(L/2)+1,int(L/2)+8,0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
 
-Mat_map.add_mat_bond(0,int(L),int(W/2)-1,int(W/2),9.654187817e-12,1.2566370614e-6)#(i_i,i_f,j_i,j_f,e,mu)
-Mat_map.add_mat_bond(int(L/2)+1,int(L/2)+8,0,int(W),9.654187817e-12,1.2566370614e-6)#(i_i,i_f,j_i,j_f,e,mu)
+# dx=1e-6
+# dy=1e-6
+
+# nmax=1
+# fmax=5e9
+# tau=0.5/fmax
+
+# tprop=nmax*(L*W)**(1/2)*(dx*dy)**(1/2)/c0
+# t=t=2*t0+3*tprop
+# step=int(np.ceil(t/dt))
+# print(step)
+
+dx    = 0.1
+dy    = 0.1
+tau   = 3.3e-9
+step = 500;
+t0=5*tau
+t=np.array(range(step-1))*dt
+# print(t)
 
 
 
- 
-dx=1
-dy=1
+nx_src=np.floor(W/2)
+ny_src=np.floor(L/2)
+Dsrc=[]
+for i in range(len(t)):  
+    Dsrc.append(ma.exp(-((t[i]-t0)/tau)**2))
+
 
 
 
@@ -79,21 +104,16 @@ Hx=cp.deepcopy(Ex)
 Hy=cp.deepcopy(Ex)
 Dz=cp.deepcopy(Ex)
 #inital condition
-Hy[int(L/2),int(W/2)+2]=.1
 
 
-
-
-
-fig = Axes3D(plt.figure())        # Create a figure
+fig = plt.figure()      # Create a figure
 scale = 10          # Typical scale of wave (higher values are clipped)
 plt.gca().axes.get_xaxis().set_ticks([])  # Turn off x axis ticks
 plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
-plt.imshow(Hy)
+plt.imshow(Ez)
 #plt.colorbar()
   
 #======DO NOT USE FOR FINAL
-n=0
 
 # <<<<<<< Updated upstream
 ims=[]
@@ -105,11 +125,10 @@ ims=[]
 X = range(L)
 Y = range(W)
 X, Y = np.meshgrid(X, Y)
+for t in range(step) :
 
-while(n<800):
 
 
-	print(n)
 	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
 	#print(CEx)
 	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
@@ -121,16 +140,20 @@ while(n<800):
 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
 	Dz=lin_func.M_Ez_Dz_update(Dz,CHz,Mat_map.M_Ez_Coef_Hz)
 	#add in source here
-
+	Dz[nx_src-1,ny_src-1]=Dz[nx_src-1,ny_src-1]+Dsrc[t-1]
+    
 	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
 	#print("Ez=",Ez)
-	# im=plt.imshow(Ez, animated=True,interpolation="bicubic")
-	# plt.hsv()
-	im=Axes3D.plot_surface(X=X, Y=Y, Z=Ez,rstride=1, cstride=1)
+
+
+
+	im=plt.imshow(Ez, animated=True,interpolation="bicubic")
+	#plt.hsv()
+	#im=Axes3D.plot_surface(X=X, Y=Y, Z=Ez,rstride=1, cstride=1)
 	#plt.colorbar()
 	ims.append([im])
 	#np.savetxt("Ez10.csv", Ez, delimiter=",")
-	n=n+1
+	print(t)
 
 
 
