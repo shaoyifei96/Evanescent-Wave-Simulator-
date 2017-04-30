@@ -39,7 +39,7 @@ e0=8.854187817e-12
 mu0=1.2566370614e-6
 c0=299792458.0#wrong number for not explode
 
-dt=(e0*mu0)**(1/2)/c0/5#originally 2 in the denominator changed to 5
+dt=(e0*mu0)**(1/2)*L/c0/2#originally 2 in the denominator changed to 5
   
 Mat_map=mat.Mat(L,W,dt)
 
