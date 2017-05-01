@@ -89,7 +89,7 @@ dy=.1
 
 
 tau   = 3.3e-8
-step = 500;
+step = 200;
 t0=5*tau
 
 t=np.array(range(step-1))*dt
@@ -222,6 +222,7 @@ plt.imshow(Ez)
 
 # <<<<<<< Updated upstream
 ims=[]
+Ezs=[]
 # <<<<<<< HEAD
 # =======
 # >>>>>>> Stashed changes
@@ -264,10 +265,10 @@ for t in range(step) :
 	#print("CEx=\n",CEx)
 #	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
 	#print("CEy=\n",CEy)
-	Hx=Hx-lin_func.M_Ez_Hx_update(CEx,Mat_map.M_Ez_Coef_Ex)
+	Hx=Hx-cont*CEx
 	#Hx=Hx-CEx*cont
 	#print("Hx=\n",Hx)
-	Hy=Hy-lin_func.M_Ez_Hy_update(CEy,Mat_map.M_Ez_Coef_Ey)
+	Hy=Hy-cont*CEy
 	#Hy=Hy-CEy*cont
 
 	
@@ -275,7 +276,7 @@ for t in range(step) :
 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
 	#print("CHz=\n",CHz)
 
-	Dz=Dz+lin_func.M_Ez_Dz_update(CHz,Mat_map.M_Ez_Coef_Hz)
+	Dz=Dz+CHz*cont
 	#Dz=Dz+CHz*cont
 
 	#print("Dz(nosource)=\n",Dz)
@@ -315,6 +316,7 @@ for t in range(step) :
 	#im=Axes3D.plot_surface(X=X, Y=Y, Z=Ez,rstride=1, cstride=1)
 	#plt.colorbar()
 	ims.append([im])
+	Ezs.append([Ez])
 	#np.savetxt("Ez10.csv", Ez, delimiter=",")
 	print(t)
 
@@ -332,14 +334,26 @@ for t in range(step) :
 	#Record Some Data
 	#Simulate
 
-ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True,
-                                repeat_delay=0)
+#ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True,
+#                                repeat_delay=0)
+#
+#plt.show()
 
+
+def data(i,z,line):
+	#print(i)
+	ax.clear()
+	line=ax.plot_surface(xx,yy,Ezs[i][0],vmin=-1,vmax=1,cmap="hsv")
+	return line,
+
+
+fig =plt.figure(1)
+ax=fig.add_subplot(111,projection="3d")
+
+x=range(W)
+y=range(L)
+xx,yy=np.meshgrid(x,y)
+
+line=ax.plot_surface(xx,yy,Ezs[1][0],color='b')
+ani=animation.FuncAnimation(fig, data, fargs=(Ezs[1][0],line),interval=30,blit=False)
 plt.show()
-
-
-
-
-
-
-
