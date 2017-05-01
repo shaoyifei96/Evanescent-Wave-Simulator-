@@ -39,12 +39,12 @@ W=100
 
 e0=1
 mu0=1
-c0=299792458.0#wrong number for not explode
+c0=1#wrong number for not explode
 
 e1=2#different material
 
-dt = 0.3e-8
-#dt=(e1*mu0)**(1/2)*L/c0/2#originally 2 in the denominator changed to 5
+#dt = 0.3e-8
+dt=(e1*mu0)**(1/2)*L/c0/2#originally 2 in the denominator changed to 5
   
 Mat_map=mat.Mat(L,W,dt)
 print(Mat_map.M_Ez_Coef_Ex)
@@ -75,20 +75,21 @@ matbond_high=100
 dx=.1
 dy=.1
 
-# tprop=nmax*(L*W)**(1/2)*(dx*dy)**(1/2)/c0
-# t=t=2*t0+3*tprop
-# step=int(np.ceil(t/dt))
-# print(step)
+
 
 
 tau   = 3.3e-8
-step = 300;
+#step = 300;
 t0=5*tau
+tprop=1*(L*W)**(1/2)*(dx*dy)**(1/2)/c0
+t=t=2*t0+3*tprop
+step=int(np.ceil(t/dt))
+print(step)
 t=np.array(range(step-1))*dt
 # print(t)
 
 
-s=dx/(2)+dt/2
+s=dx/(2*c0)+dt/2
 # print(t)
 nx_src=int(np.floor(15))
 ny_src=int(np.floor(15))
