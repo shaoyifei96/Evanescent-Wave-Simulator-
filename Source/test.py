@@ -235,22 +235,22 @@ for t in range(step) :
 	#print("CEx=\n",CEx)
 	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
 	#print("CEy=\n",CEy)
-	#Hx=Hx+lin_func.M_Ez_Hx_update(CEx,Mat_map.M_Ez_Coef_Ex)
-	Hx=Hx-CEx*cont
+	Hx=Hx+lin_func.M_Ez_Hx_update(CEx,Mat_map.M_Ez_Coef_Ex)
+	#Hx=Hx-CEx*cont
 	#print("Hx=\n",Hx)
-	#Hy=Hy+lin_func.M_Ez_Hy_update(CEy,Mat_map.M_Ez_Coef_Ey)
-	Hy=Hy-CEy*cont
+	Hy=Hy+lin_func.M_Ez_Hy_update(CEy,Mat_map.M_Ez_Coef_Ey)
+	#Hy=Hy-CEy*cont
 	
 	#print("Hy=\n",Hy)
 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
 	#print("CHz=\n",CHz)
-	#Dz=Dz+lin_func.M_Ez_Dz_update(CHz,Mat_map.M_Ez_Coef_Hz)
-	Dz=Dz+CHz*cont
+	Dz=Dz+lin_func.M_Ez_Dz_update(CHz,Mat_map.M_Ez_Coef_Hz)
+	#Dz=Dz+CHz*cont
 	#print("Dz(nosource)=\n",Dz)
 	#print("SC=",Dsrc[t-1])
 	Dz[nx_src-1,ny_src-1]=Dsrc[t-1]+Dz[nx_src-1,ny_src-1]
 	#print("Dz(has source)=\n",Dz)
-	Ez=Dz
+	Ez=Dz/Mat_map.e
 	print("EzNew=\n",Ez)
 
 
@@ -272,7 +272,7 @@ for t in range(step) :
     
 # 	IDz=Dz+IDz
     
-<<<<<<< Updated upstream
+
 # 	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
 # 	#add in source here
 # 	Dz[nx_src-1,ny_src-1]=Dz[nx_src-1,ny_src-1]+Dsrc[t-1]
@@ -284,15 +284,15 @@ for t in range(step) :
     
 # >>>>>>> 5e4a6a3e2fdf7286fe575b2ea4056d4b1c6f1802
 
-	plt.hsv()
-=======
-	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
-	#add in source here
-	Dz[nx_src-1,ny_src-1]=Dz[nx_src-1,ny_src-1]+Dsrc[t-1]
-	#Dz[nx_src-1,ny_src-1]=Dsrc[t-1]
-	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
-	#print("Ez=",Ez)
->>>>>>> Stashed changes
+#	plt.hsv()
+#=======
+#	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
+#	#add in source here
+#	Dz[nx_src-1,ny_src-1]=Dz[nx_src-1,ny_src-1]+Dsrc[t-1]
+#	#Dz[nx_src-1,ny_src-1]=Dsrc[t-1]
+#	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
+#	#print("Ez=",Ez)
+#>>>>>>> Stashed changes
 
 	#im=Axes3D.plot_surface(X=X, Y=Y, Z=Ez,rstride=1, cstride=1)
 	#plt.colorbar()
