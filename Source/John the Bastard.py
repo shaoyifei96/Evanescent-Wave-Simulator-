@@ -52,8 +52,8 @@ print(Mat_map.M_Ez_Coef_Ey)
 print(Mat_map.M_Ez_Coef_Hz)
 print(Mat_map.M_Ez_Coef_Dz)
     
-Mat_map.add_mat_bond(0,int(L),int(W/2)-1,int(W/2),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
-Mat_map.add_mat_bond(int(L/2)+1,int(L/2)+8,0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
+#Mat_map.add_mat_bond(0,int(L),int(W/2)-1,int(W/2),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
+#Mat_map.add_mat_bond(int(L/2)+1,int(L/2)+8,0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
 
 # dx=1e-6
 # dy=1e-6
@@ -80,7 +80,7 @@ dy=1
 # dx    = 0.1
 # dy    = 0.1
 tau   = 3.3e-5
-step = 300;
+step=100;
 t0=10*tau
 t=np.array(range(step-1))*dt
 # print(t)
@@ -162,22 +162,22 @@ for t in range(step) :
 	#print("CEx=\n",CEx)
 	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
 	#print("CEy=\n",CEy)
-	#Hx=Hx+lin_func.M_Ez_Hx_update(CEx,Mat_map.M_Ez_Coef_Ex)
-	Hx=Hx-CEx*cont
+	Hx=Hx-lin_func.M_Ez_Hx_update(CEx,Mat_map.M_Ez_Coef_Ex)
+	#Hx=Hx-CEx*cont
 	#print("Hx=\n",Hx)
-	#Hy=Hy+lin_func.M_Ez_Hy_update(CEy,Mat_map.M_Ez_Coef_Ey)
-	Hy=Hy-CEy*cont
+	Hy=Hy-lin_func.M_Ez_Hy_update(CEy,Mat_map.M_Ez_Coef_Ey)
+	#Hy=Hy-CEy*cont
 	
 	#print("Hy=\n",Hy)
 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
 	#print("CHz=\n",CHz)
-	#Dz=Dz+lin_func.M_Ez_Dz_update(CHz,Mat_map.M_Ez_Coef_Hz)
-	Dz=Dz+CHz*cont
+	Dz=Dz+lin_func.M_Ez_Dz_update(CHz,Mat_map.M_Ez_Coef_Hz)
+	#Dz=Dz+CHz*cont
 	#print("Dz(nosource)=\n",Dz)
 	#print("SC=",Dsrc[t-1])
 	Dz[nx_src-1,ny_src-1]=Dsrc[t-1]+Dz[nx_src-1,ny_src-1]
 	#print("Dz(has source)=\n",Dz)
-	Ez=Dz
+	Ez=Dz/Mat_map.e
 	print("EzNew=\n",Ez)
 
 
