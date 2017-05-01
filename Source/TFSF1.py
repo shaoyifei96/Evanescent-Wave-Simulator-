@@ -41,20 +41,19 @@ e0=1
 mu0=1
 c0=299792458.0#wrong number for not explode
 
-
-e1=9.654187817e-12#different material
+e1=2#different material
 
 dt = 0.3e-8
-# dt=(e1*mu0)**(1/2)*L/c0/2#originally 2 in the denominator changed to 5
-
+#dt=(e1*mu0)**(1/2)*L/c0/2#originally 2 in the denominator changed to 5
+  
 Mat_map=mat.Mat(L,W,dt)
 print(Mat_map.M_Ez_Coef_Ex)
 print(Mat_map.M_Ez_Coef_Ey)
 print(Mat_map.M_Ez_Coef_Hz)
 print(Mat_map.M_Ez_Coef_Dz)
     
-#Mat_map.add_mat_bond(0,int(L),int(W/2)-1,int(W/2),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
-#Mat_map.add_mat_bond(int(L/2)+1,int(L/2)+8,0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
+#Mat_map.add_mat_bond(0,int(L),int(W/2)-10,int(W/2),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
+#Mat_map.add_mat_bond(0,int(L/2),0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
 
 # dx=1e-6
 # dy=1e-6
@@ -63,46 +62,48 @@ print(Mat_map.M_Ez_Coef_Dz)
 # fmax=5e9
 # tau=0.5/fmax
 
-def myfunction(x):
-	return 30-x
+
+def function1(x):
+	return x-50
+def function2(x):
+	return -1/50*x**2+40
 
 matbond_low=0
-matbond_high=30
-Mat_map.add_mat_bond_advanced(myfunction,matbond_low,matbond_high,10,5)
-
+matbond_high=100
+#Mat_map.add_mat_bond_advanced(function1,matbond_low,matbond_high,e1,mu0)
+#Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
+dx=.1
+dy=.1
 
 # tprop=nmax*(L*W)**(1/2)*(dx*dy)**(1/2)/c0
 # t=t=2*t0+3*tprop
 # step=int(np.ceil(t/dt))
 # print(step)
 
-#calculate the source 
-dx    = 0.1
-dy    = 0.1
-tau   = 3.3e-6
+
+tau   = 3.3e-8
 step = 500;
-t0=6*tau
-
+t0=5*tau
 t=np.array(range(step-1))*dt
-
-
 # print(t)
-nx_src=int(np.floor(W/2))
-ny_src=int(np.floor(L/2))
 
 
-Dsrc=[]
+s=dx/(2)+dt/2
+# print(t)
+nx_src=int(np.floor(15))
+ny_src=int(np.floor(15))
+A=-(Mat_map.e[nx_src-1,ny_src-1]/Mat_map.mu[nx_src-1,ny_src-1])**(1/2)
 
+Esrc=[]
+Hsrc=[]
 for i in range(len(t)):  
-    Dsrc.append(ma.exp(-((t[i]-t0)/tau)**2))
+    Esrc.append(ma.exp(-((t[i]-t0)/tau)**2))
+    Hsrc.append(A*ma.exp(-((t[i]-t0+s)/tau)**2))
+
 
 #setup, the following code should run once
 #Set Initial Conditions
 #Set Material Property
-print("mat=",Mat_map.e)
-#
-#==================TEST for material class, you can add a block of material in 2d
-
 #set the PML parameters
 PML=[10,10,10,10]
 
@@ -154,43 +155,38 @@ mHx2 = -c0/mu0/mHx0
 mHx3 = -(c0*dt/e0)*sigHx/mu0/mHx0
 mHy0 = (1/dt) + sigHx1/(2*e0)
 mHy1 = ((1/dt) - sigHx1/(2*e0))/mHy0
-mHy2 = - c0/mu0/mHy0
-mHy3 = - (c0*dt/e0) * sigHy1/mu0/mHy0
-mDz0 = (1/dt) + (sigDx + sigDy)/(2*e0)+sigDx*sigDy*(dt/4/e0**2)
-mDz1 = (1/dt) - (sigDx + sigDy)/(2*e0)-sigDx*sigDy*(dt/4/e0**2)
+mHy2 = -c0/mu0/mHy0
+mHy3 = -(c0*dt/e0)*sigHy1/mu0/mHy0
+mDz0 = (1/dt)+(sigDx + sigDy)/(2*e0)+sigDx*sigDy*(dt/4/e0**2)
+mDz1 = (1/dt)-(sigDx + sigDy)/(2*e0)-sigDx*sigDy*(dt/4/e0**2)
 mDz1 = mDz1/ mDz0
 mDz2 = c0/mDz0
-mDz4 = - (dt/e0**2)*sigDx*sigDy/mDz0
+mDz4 = -(dt/e0**2)*sigDx*sigDy/mDz0
+
+#
+#==================TEST for material class, you can add a block of material in 2d
 
 
-Mat_map=mat.Mat(L,W,dt)
-
-#Mat_map.add_mat_bond(0,int(L/2),0,int(W/2),9.254187817e-12,1.2566370614e-6)#(i_i,i_f,j_i,j_f,e,mu)
-#print("mat=",Mat_map.e)
+print("mat=",Mat_map.e)
+#==================
 
 #======TEST PURPOSE 
+
 
 Ex=np.zeros((L,W),float)
 
 r,c=np.shape(Ex)
-
 Ex[0:r,0:c]=0
 
 
 Ez=cp.deepcopy(Ex)
-
 Hx=cp.deepcopy(Ex)
 Hy=cp.deepcopy(Ex)
 Dz=cp.deepcopy(Ex)
-
 ICEx=cp.deepcopy(Ex)
 ICEy=cp.deepcopy(Ex)
 IDz=cp.deepcopy(Ex)
-
 #inital condition
-
-#Hy[int(L/2),int(W/2)]=.1
-
 
 fig =plt.figure(1)      # Create a figure
 ax1=plt.subplot(1,2,1)
@@ -198,10 +194,12 @@ ax1.set_aspect('equal')
 ax1.set_xlim([0, W])
 ax1.set_ylim([0, L])
 x=range(matbond_low,matbond_high)
-y=[]
+y1=[]
+y2=[]
 for x_now in x:
-    y.append(myfunction(x_now))
-im_mat=ax1.plot(x,y)
+    y1.append(function1(x_now))
+    y2.append(function2(x_now))
+im_mat=ax1.plot(x,y1,x,y2)
 
 plt.subplot(1,2,2)
       # Create a figure
@@ -225,81 +223,97 @@ ims=[]
 # >>>>>>> Stashed changes
 # while(n<100):
 # =======
-cont=.05
-
-
+cont=0.05
 for t in range(step) :
-
-
-	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
-	#print("CEx=\n",CEx)
-	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
-	#print("CEy=\n",CEy)
-	Hx=Hx+lin_func.M_Ez_Hx_update(CEx,Mat_map.M_Ez_Coef_Ex)
-	#Hx=Hx-CEx*cont
-	#print("Hx=\n",Hx)
-	Hy=Hy+lin_func.M_Ez_Hy_update(CEy,Mat_map.M_Ez_Coef_Ey)
-	#Hy=Hy-CEy*cont
-	
-	#print("Hy=\n",Hy)
-	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
-	#print("CHz=\n",CHz)
-	Dz=Dz+lin_func.M_Ez_Dz_update(CHz,Mat_map.M_Ez_Coef_Hz)
-	#Dz=Dz+CHz*cont
-	#print("Dz(nosource)=\n",Dz)
-	#print("SC=",Dsrc[t-1])
-	Dz[nx_src-1,ny_src-1]=Dsrc[t-1]+Dz[nx_src-1,ny_src-1]
-	#print("Dz(has source)=\n",Dz)
-	Ez=Dz/Mat_map.e
-	print("EzNew=\n",Ez)
-
-
-	im=plt.imshow(Ez, animated=True,origin='lower',interpolation="none",vmin=-1e-40, vmax=1e-40)
-
-# =======
-	
 # 	#print(CEx)
-# 	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
+ 	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
+	#print("CEx=\n",CEx)
+ 	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
+ 	for i in range(L):
+         CEx[i,ny_src-1]=(Ez[i,ny_src-1]-Ez[i,ny_src-2]-Esrc[t-1])/dy
+     
+	#print("CEy=\n",CEy)
 # 	ICEx=ICEx+CEx
 # 	ICEy=ICEy+CEy
-    
-    
+#    
+#    
 # 	Hx=mHx1*Hx+(mHx2*CEx+mHx3*ICEx)
 # 	#print(Hx)
 # 	Hy=mHy1*Hy+(mHy2*CEy+mHy3*ICEy)
 # 	#print(Hy)
 # 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
-    
+#    
 # 	IDz=Dz+IDz
-    
-
+#    
+#
 # 	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
 # 	#add in source here
 # 	Dz[nx_src-1,ny_src-1]=Dz[nx_src-1,ny_src-1]+Dsrc[t-1]
 # 	#Dz[nx_src-1,ny_src-1]=Dsrc[t-1]
-# 	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
+# 	Ez=Dz/Mat_map.e
 # 	#print("Ez=",Ez)
 
-# 	im=plt.imshow(Ez, animated=True,origin='lower')
-    
-# >>>>>>> 5e4a6a3e2fdf7286fe575b2ea4056d4b1c6f1802
 
-#	plt.hsv()
-#=======
-#	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
-#	#add in source here
-#	Dz[nx_src-1,ny_src-1]=Dz[nx_src-1,ny_src-1]+Dsrc[t-1]
-#	#Dz[nx_src-1,ny_src-1]=Dsrc[t-1]
-#	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
-#	#print("Ez=",Ez)
-#>>>>>>> Stashed changes
+
+
+
+
+
+	#CEx=cr.M_Ez_Curl_Ex(Ez,dy)
+	#print("CEx=\n",CEx)
+#	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
+	#print("CEy=\n",CEy)
+ 	Hx=Hx-CEx*cont
+	#print("Hx=\n",Hx)
+#	Hy=Hy-lin_func.M_Ez_Hy_update(CEy,Mat_map.M_Ez_Coef_Ey)
+ 	Hy=Hy-CEy*cont
+	
+	#print("Hy=\n",Hy)
+ 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
+ 	for i in range(L):
+         CHz[i,ny_src-1]=(Hy[i,ny_src-1]-Hy[i-1,ny_src-1]+Hy[i,ny_src-1]+Hy[i,ny_src-2]+Hsrc[t-1])/dy
+     
+     
+	#print("CHz=\n",CHz)
+	#Dz=Dz+lin_func.M_Ez_Dz_update(CHz,Mat_map.M_Ez_Coef_Hz)
+ 	Dz=Dz+CHz*cont
+	#print("Dz(nosource)=\n",Dz)
+	#print("SC=",Dsrc[t-1])
+ 	#Dz[nx_src-1,ny_src-1]=Dsrc[t-1]+Dz[nx_src-1,ny_src-1]
+	#print("Dz(has source)=\n",Dz)
+ 	Ez=Dz/Mat_map.e
+	#print("EzNew=\n",Ez)
+#	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
+#	#print("CEx=\n",CEx)
+#	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
+#	#print("CEy=\n",CEy)
+#	#Hx=Hx+lin_func.M_Ez_Hx_update(CEx,Mat_map.M_Ez_Coef_Ex)
+#	Hx=Hx-CEx*cont
+#	#print("Hx=\n",Hx)
+#	#Hy=Hy+lin_func.M_Ez_Hy_update(CEy,Mat_map.M_Ez_Coef_Ey)
+#	Hy=Hy-CEy*cont
+#	
+#	#print("Hy=\n",Hy)
+#	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
+#	#print("CHz=\n",CHz)
+#	#Dz=Dz+lin_func.M_Ez_Dz_update(CHz,Mat_map.M_Ez_Coef_Hz)
+#	Dz=Dz+CHz*cont
+#	#print("Dz(nosource)=\n",Dz)
+#	#print("SC=",Dsrc[t-1])
+# 	Dz[nx_src-1,ny_src-1]=Dsrc[t-1]+Dz[nx_src-1,ny_src-1]
+#	#print("Dz(has source)=\n",Dz)
+#	Ez=Dz
+#	print("EzNew=\n",Ez)
+ 	im=plt.imshow(Ez, animated=True,origin='lower',interpolation="none")
+
+
+ 	plt.hsv()
 
 	#im=Axes3D.plot_surface(X=X, Y=Y, Z=Ez,rstride=1, cstride=1)
 	#plt.colorbar()
-	im=plt.imshow(Ez, animated=True,interpolation="none",vmin=-10,vmax=10)
-	ims.append([im])
+ 	ims.append([im])
 	#np.savetxt("Ez10.csv", Ez, delimiter=",")
-	print(Ez)
+ 	print(t)
 
 
 	#Update D from H
@@ -314,7 +328,6 @@ for t in range(step) :
 
 	#Record Some Data
 	#Simulate
-
 
 ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True,
                                 repeat_delay=0)
