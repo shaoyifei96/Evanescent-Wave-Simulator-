@@ -32,8 +32,8 @@ from mpl_toolkits.mplot3d import Axes3D
 
 
 #set up the size of the map
-L=5
-W=5
+L=50
+W=50
 #set the size of a single grid
 # l=1
 
@@ -72,34 +72,92 @@ dy=1
 # step=int(np.ceil(t/dt))
 # print(step)
 
+
+#calculate the source 
 dx    = 0.1
 dy    = 0.1
 tau   = 3.3e-6
 step = 50;
 t0=6*tau
 t=np.array(range(step-1))*dt
-s=dx/(2*c0)+dt/2
+
 # print(t)
 nx_src=int(np.floor(W/2))
 ny_src=int(np.floor(L/2))
-A=-(mat.e[nx_src-1,ny_src-1]/mat.mu[nx_src-1,ny_src-1])**(1/2)
 
 
 Dsrc=[]
-Hsrc=[]
+
 for i in range(len(t)):  
     Dsrc.append(ma.exp(-((t[i]-t0)/tau)**2))
-    Hsrc.append(ma.exp(-((t[i]-t0+s)/tau)**2))
 
 #setup, the following code should run once
 #Set Initial Conditions
 #Set Material Property
-#
+print("mat=",Mat_map.e)
 #
 #==================TEST for material class, you can add a block of material in 2d
 
+#set the PML parameters
+PML=[10,10,10,10]
 
-print("mat=",Mat_map.e)
+W2=2*W
+L2=2*L
+
+sigx=np.zeros([L2,W2])
+print(sigx)
+for nx in range(2*PML[0]):
+    nx1=2*PML[0]-nx;
+    for i in range(W2):
+        sigx[nx1-1,i]=(0.5*e0/dt)*(nx/2/PML[0])**3
+for nx in range(2*PML[1]):
+    nx1=L2-2*PML[1]+nx+1;
+    for i in range(W2):
+        sigx[nx1-1,i]=(0.5*e0/dt)*(nx/2/PML[1])**3
+
+sigy=np.zeros([L2,W2])
+for ny in range(2*PML[2]):
+    ny1=2*PML[2]-ny;
+    for i in range(L2):
+        sigy[i,ny1-1]=(0.5*e0/dt)*(ny/2/PML[2])**3
+for ny in range(2*PML[3]):
+    ny1=W2-2*PML[3]+ny+1;
+    for i in range(L2):
+        sigy[i,ny1-1]=(0.5*e0/dt)*(ny/2/PML[3])**3
+
+
+sigHx=np.zeros([L,W])
+sigHy=np.zeros([L,W])
+sigHx1=np.zeros([L,W])
+sigHy1=np.zeros([L,W])
+sigDx=np.zeros([L,W])
+sigDy=np.zeros([L,W])
+
+
+for i in range(L):
+    for j in range(W):
+        sigHx[i,j]=sigx[i*2,j*2]
+        sigHy[i,j]=sigy[i*2,j*2]
+        sigHx1[i,j]=sigx[i*2+1,j*2+1]
+        sigHy1[i,j]=sigx[i*2+1,j*2+1]
+        sigDx[i,j]=sigx[i*2,j*2]
+        sigDy[i,j]=sigy[i*2,j*2]
+        
+mHx0 = (1/dt) + sigHy/(2*e0)
+mHx1 = ((1/dt) - sigHy/(2*e0))/mHx0
+mHx2 = -c0/mu0/mHx0
+mHx3 = -(c0*dt/e0)*sigHx/mu0/mHx0
+mHy0 = (1/dt) + sigHx/(2*e0)
+mHy1 = ((1/dt) - sigHx/(2*e0))/mHy0
+mHy2 = - c0/mu0/mHy0
+mHy3 = - (c0*dt/e0) * sigHy/mu0/mHy0
+mDz0 = (1/dt) + (sigDx + sigDy)/(2*e0)+sigDx*sigDy*(dt/4/e0**2)
+mDz1 = (1/dt) - (sigDx + sigDy)/(2*e0)- sigDx*sigDy*(dt/4/e0**2)
+mDz1 = mDz1/ mDz0
+mDz2 = c0/mDz0
+mDz4 = - (dt/e0**2)*sigDx*sigDy/mDz0
+
+
 #==================
 
 #======TEST PURPOSE 

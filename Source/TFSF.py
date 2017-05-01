@@ -84,11 +84,10 @@ nx_src=int(np.floor(W/2))
 ny_src=int(np.floor(L/2))
 A=-(mat.e[nx_src-1,ny_src-1]/mat.mu[nx_src-1,ny_src-1])**(1/2)
 
-
-Dsrc=[]
+Esrc=[]
 Hsrc=[]
 for i in range(len(t)):  
-    Dsrc.append(ma.exp(-((t[i]-t0)/tau)**2))
+    Esrc.append(ma.exp(-((t[i]-t0)/tau)**2))
     Hsrc.append(ma.exp(-((t[i]-t0+s)/tau)**2))
 
 #setup, the following code should run once
@@ -164,7 +163,7 @@ for t in range(step) :
 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
 	Dz=lin_func.M_Ez_Dz_update(Dz,CHz,Mat_map.M_Ez_Coef_Hz)
 	#add in source here
-	Dz[nx_src-1,ny_src-1]=Dz[nx_src-1,ny_src-1]+Dsrc[t-1]
+	Ez[nx_src-1,ny_src-1]=Ez[nx_src-1,ny_src-1]+Esrc[t-1]
 	#Dz[nx_src-1,ny_src-1]=Dsrc[t-1]
 	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
 	#print("Ez=",Ez)
