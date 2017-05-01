@@ -64,12 +64,12 @@ print(Mat_map.M_Ez_Coef_Dz)
 
 
 def function1(x):
-	return -1/50*x**2+70
+	return x-50
 def function2(x):
 	return -1/50*x**2+40
 
 matbond_low=0
-matbond_high=50
+matbond_high=100
 #Mat_map.add_mat_bond_advanced(function1,matbond_low,matbond_high,e1,mu0)
 #Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
 dx=.1
@@ -90,8 +90,8 @@ t=np.array(range(step-1))*dt
 
 s=dx/(2)+dt/2
 # print(t)
-nx_src=int(np.floor(L/4))
-ny_src=int(np.floor(W/4))
+nx_src=int(np.floor(15))
+ny_src=int(np.floor(15))
 A=-(Mat_map.e[nx_src-1,ny_src-1]/Mat_map.mu[nx_src-1,ny_src-1])**(1/2)
 
 Esrc=[]
