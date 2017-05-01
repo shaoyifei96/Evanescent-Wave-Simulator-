@@ -29,7 +29,7 @@ import matplotlib.animation as animation
 import time as tm
 import matplotlib.colors as clr
 from mpl_toolkits.mplot3d import Axes3D
-
+from matplotlib import cm
 
 #set up the size of the map
 L=100
@@ -41,7 +41,7 @@ e0=1
 mu0=1
 c0=299792458.0#wrong number for not explode
 
-e1=2#different material
+e1=10#different material
 
 dt = 0.3e-8
 #dt=(e1*mu0)**(1/2)*L/c0/2#originally 2 in the denominator changed to 5
@@ -193,7 +193,8 @@ IDz=cp.deepcopy(Ex)
 #inital condition
 
 fig =plt.figure(1)      # Create a figure
-ax1=plt.subplot(1,2,1)
+
+ax1=plt.subplot(1,3,1)
 ax1.set_aspect('equal')
 ax1.set_xlim([0, W])
 ax1.set_ylim([0, L])
@@ -205,7 +206,7 @@ for x_now in x:
     y2.append(function2(x_now))
 im_mat=ax1.plot(x,y1,x,y2)
 
-plt.subplot(1,2,2)
+plt.subplot(1,3,2)
       # Create a figure
 plt.gca().axes.get_xaxis().set_ticks([])  # Turn off x axis ticks
 plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
@@ -334,26 +335,27 @@ for t in range(step) :
 	#Record Some Data
 	#Simulate
 
-#ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True,
-#                                repeat_delay=0)
-#
+ani = animation.ArtistAnimation(fig, ims, interval=30, blit=True,
+                                repeat_delay=0)
+
 #plt.show()
 
 
 def data(i):
 	#print(i)
 	ax.clear()
-	line=ax.plot_surface(xx,yy,Ezs[i][0],vmin=-1,vmax=1,cmap="hsv")
+	line=ax.plot_surface(xx,yy,Ezs[i][0],cmap=cm.coolwarm)
+	ax.set_zlim(-0.05, 0.08)
 	return line,
 
 print("Ezs=",np.shape(Ezs))
 
-ax=fig.add_subplot(122,projection="3d")
-
+ax=fig.add_subplot(133,projection="3d")
 x=range(W)
 y=range(L)
 xx,yy=np.meshgrid(x,y)
 
-line=ax.plot_surface(xx,yy,Ezs[1][0],color='b')
-ani=animation.FuncAnimation(fig, data,frames=range(step),interval=30,blit=False)
+line=ax.plot_surface(xx,yy,Ezs[1][0])
+ax.set_zlim(-0.05, 0.08)
+ani=animation.FuncAnimation(fig, data,frames=range(step),interval=30,repeat_delay=0,blit=False)
 plt.show()
