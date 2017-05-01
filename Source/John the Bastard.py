@@ -340,20 +340,20 @@ for t in range(step) :
 #plt.show()
 
 
-def data(i,z,line):
+def data(i):
 	#print(i)
 	ax.clear()
 	line=ax.plot_surface(xx,yy,Ezs[i][0],vmin=-1,vmax=1,cmap="hsv")
 	return line,
 
+print("Ezs=",np.shape(Ezs))
 
-fig =plt.figure(1)
-ax=fig.add_subplot(111,projection="3d")
+ax=fig.add_subplot(122,projection="3d")
 
 x=range(W)
 y=range(L)
 xx,yy=np.meshgrid(x,y)
 
 line=ax.plot_surface(xx,yy,Ezs[1][0],color='b')
-ani=animation.FuncAnimation(fig, data, fargs=(Ezs[1][0],line),interval=30,blit=False)
+ani=animation.FuncAnimation(fig, data,frames=range(step),interval=30,blit=False)
 plt.show()
