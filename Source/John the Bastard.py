@@ -54,7 +54,7 @@ print(Mat_map.M_Ez_Coef_Dz)
     
 
 #Mat_map.add_mat_bond(0,int(L),int(W/2)-1,int(W/2),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
-#Mat_map.add_mat_bond(int(L/2)+1,int(L/2)+8,0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
+Mat_map.add_mat_bond(0,int(L/2)-25,0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
 
 
 #Mat_map.add_mat_bond(0,int(L),int(W/2)-10,int(W/2),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
@@ -75,7 +75,7 @@ def function2(x):
 	return -1/50*x**2+40
 
 matbond_low=0
-matbond_high=50
+matbond_high=60
 Mat_map.add_mat_bond_advanced(function1,matbond_low,matbond_high,e1,mu0)
 Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
 dx=.1
@@ -343,17 +343,21 @@ for t in range(step) :
 def data(i):
 	#print(i)
 	ax.clear()
-	line=ax.plot_surface(xx,yy,Ezs[i][0],vmin=-1,vmax=1,cmap="hsv")
+	line=ax.plot_surface(xx,yy,Ezs[i][0],cmap="hsv")
+	
 	return line,
 
 print("Ezs=",np.shape(Ezs))
 
 ax=fig.add_subplot(122,projection="3d")
 
+
 x=range(W)
 y=range(L)
 xx,yy=np.meshgrid(x,y)
 
 line=ax.plot_surface(xx,yy,Ezs[1][0],color='b')
-ani=animation.FuncAnimation(fig, data,frames=range(step),interval=30,blit=False)
+
+ani=animation.FuncAnimation(fig, data, fargs=(Ezs[1][0],line),interval=30,blit=True)
+
 plt.show()
