@@ -52,8 +52,8 @@ print(Mat_map.M_Ez_Coef_Ey)
 print(Mat_map.M_Ez_Coef_Hz)
 print(Mat_map.M_Ez_Coef_Dz)
     
-#Mat_map.add_mat_bond(0,int(L),int(W/2)-1,int(W/2),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
-#Mat_map.add_mat_bond(int(L/2)+1,int(L/2)+8,0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
+Mat_map.add_mat_bond(0,int(L),int(W/2)-1,int(W/2),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
+Mat_map.add_mat_bond(int(L/2)+1,int(L/2)+8,0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
 
 # dx=1e-6
 # dy=1e-6
@@ -80,7 +80,7 @@ dy=1
 # dx    = 0.1
 # dy    = 0.1
 tau   = 3.3e-5
-step = 800;
+step = 300;
 t0=10*tau
 t=np.array(range(step-1))*dt
 # print(t)
