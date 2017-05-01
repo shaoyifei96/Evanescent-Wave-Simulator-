@@ -361,6 +361,7 @@ y=range(L)
 xx,yy=np.meshgrid(x,y)
 
 
+
 line=ax.plot_surface(xx,yy,Ezs[1][0])
 ax.set_zlim(-0.05, 0.08)
 ani=animation.FuncAnimation(fig, data,frames=range(step),interval=30,repeat_delay=0,blit=False)

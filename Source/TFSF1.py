@@ -82,7 +82,7 @@ dy=.1
 
 
 tau   = 3.3e-8
-step = 500;
+step = 300;
 t0=5*tau
 t=np.array(range(step-1))*dt
 # print(t)
@@ -98,7 +98,7 @@ Esrc=[]
 Hsrc=[]
 for i in range(len(t)):  
     Esrc.append(ma.exp(-((t[i]-t0)/tau)**2))
-    Hsrc.append(A*ma.exp(-((t[i]-t0+s)/tau)**2))
+    Hsrc.append(A*ma.exp(-((t[i]-t0)/tau+s)**2))
 
 
 #setup, the following code should run once
@@ -271,7 +271,7 @@ for t in range(step) :
 	#print("Hy=\n",Hy)
  	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
  	for i in range(L):
-         CHz[i,ny_src-1]=(Hy[i,ny_src-1]-Hy[i-1,ny_src-1]+Hy[i,ny_src-1]+Hy[i,ny_src-2]+Hsrc[t-1])/dy
+         CHz[i,ny_src-1]=(Hy[i,ny_src-1]-Hy[i-1,ny_src-1])/dx-(Hy[i,ny_src-1]-Hy[i,ny_src-2])/dy+Hsrc[t-1]/dy
      
      
 	#print("CHz=\n",CHz)
