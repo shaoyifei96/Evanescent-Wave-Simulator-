@@ -70,8 +70,8 @@ def function2(x):
 
 matbond_low=0
 matbond_high=50
-Mat_map.add_mat_bond_advanced(function1,matbond_low,matbond_high,e1,mu0)
-Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
+#Mat_map.add_mat_bond_advanced(function1,matbond_low,matbond_high,e1,mu0)
+#Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
 dx=.1
 dy=.1
 
@@ -88,13 +88,17 @@ t=np.array(range(step-1))*dt
 # print(t)
 
 
+s=dx/(2)+dt/2
+# print(t)
+nx_src=int(np.floor(L/4))
+ny_src=int(np.floor(W/4))
+A=-(Mat_map.e[nx_src-1,ny_src-1]/Mat_map.mu[nx_src-1,ny_src-1])**(1/2)
 
-nx_src=int(0.5*L)
-ny_src=int(0.5*W)
-Dsrc=[]
-
+Esrc=[]
+Hsrc=[]
 for i in range(len(t)):  
-    Dsrc.append(ma.exp(-((t[i]-t0)/tau)**2))
+    Esrc.append(ma.exp(-((t[i]-t0)/tau)**2))
+    Hsrc.append(A*ma.exp(-((t[i]-t0+s)/tau)**2))
 
 
 #setup, the following code should run once
@@ -225,6 +229,9 @@ for t in range(step) :
  	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
 	#print("CEx=\n",CEx)
  	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
+ 	for i in range(L):
+         CEx[i,ny_src-1]=(Ez[i,ny_src-1]-Ez[i,ny_src-2]-Esrc[t-1])/dy
+     
 	#print("CEy=\n",CEy)
 # 	ICEx=ICEx+CEx
 # 	ICEy=ICEy+CEy
@@ -263,12 +270,16 @@ for t in range(step) :
 	
 	#print("Hy=\n",Hy)
  	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
+ 	for i in range(L):
+         CHz[i,ny_src-1]=(Hy[i,ny_src-1]-Hy[i-1,ny_src-1]+Hy[i,ny_src-1]+Hy[i,ny_src-2]+Hsrc[t-1])/dy
+     
+     
 	#print("CHz=\n",CHz)
 	#Dz=Dz+lin_func.M_Ez_Dz_update(CHz,Mat_map.M_Ez_Coef_Hz)
  	Dz=Dz+CHz*cont
 	#print("Dz(nosource)=\n",Dz)
 	#print("SC=",Dsrc[t-1])
- 	Dz[nx_src-1,ny_src-1]=Dsrc[t-1]+Dz[nx_src-1,ny_src-1]
+ 	#Dz[nx_src-1,ny_src-1]=Dsrc[t-1]+Dz[nx_src-1,ny_src-1]
 	#print("Dz(has source)=\n",Dz)
  	Ez=Dz/Mat_map.e
 	#print("EzNew=\n",Ez)
@@ -296,7 +307,7 @@ for t in range(step) :
  	im=plt.imshow(Ez, animated=True,origin='lower',interpolation="none")
 
 
- 	plt.hot()
+ 	plt.hsv()
 
 	#im=Axes3D.plot_surface(X=X, Y=Y, Z=Ez,rstride=1, cstride=1)
 	#plt.colorbar()
