@@ -181,7 +181,7 @@ for t in range(step) :
 	print("EzNew=\n",Ez)
 
 
-	im=plt.imshow(Ez, animated=True,origin='lower',interpolation="none",vmin=-1e-40, vmax=1e-40)
+	im=plt.imshow(Ez, animated=True,origin='lower',interpolation="none")
 
 
 	plt.hsv()

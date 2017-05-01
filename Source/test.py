@@ -152,12 +152,12 @@ mHx0 = (1/dt) + sigHy/(2*e0)
 mHx1 = ((1/dt) - sigHy/(2*e0))/mHx0
 mHx2 = -c0/mu0/mHx0
 mHx3 = -(c0*dt/e0)*sigHx/mu0/mHx0
-mHy0 = (1/dt) + sigHx/(2*e0)
-mHy1 = ((1/dt) - sigHx/(2*e0))/mHy0
+mHy0 = (1/dt) + sigHx1/(2*e0)
+mHy1 = ((1/dt) - sigHx1/(2*e0))/mHy0
 mHy2 = - c0/mu0/mHy0
-mHy3 = - (c0*dt/e0) * sigHy/mu0/mHy0
+mHy3 = - (c0*dt/e0) * sigHy1/mu0/mHy0
 mDz0 = (1/dt) + (sigDx + sigDy)/(2*e0)+sigDx*sigDy*(dt/4/e0**2)
-mDz1 = (1/dt) - (sigDx + sigDy)/(2*e0)- sigDx*sigDy*(dt/4/e0**2)
+mDz1 = (1/dt) - (sigDx + sigDy)/(2*e0)-sigDx*sigDy*(dt/4/e0**2)
 mDz1 = mDz1/ mDz0
 mDz2 = c0/mDz0
 mDz4 = - (dt/e0**2)*sigDx*sigDy/mDz0
@@ -272,6 +272,7 @@ for t in range(step) :
     
 # 	IDz=Dz+IDz
     
+<<<<<<< Updated upstream
 # 	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
 # 	#add in source here
 # 	Dz[nx_src-1,ny_src-1]=Dz[nx_src-1,ny_src-1]+Dsrc[t-1]
@@ -284,6 +285,14 @@ for t in range(step) :
 # >>>>>>> 5e4a6a3e2fdf7286fe575b2ea4056d4b1c6f1802
 
 	plt.hsv()
+=======
+	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
+	#add in source here
+	Dz[nx_src-1,ny_src-1]=Dz[nx_src-1,ny_src-1]+Dsrc[t-1]
+	#Dz[nx_src-1,ny_src-1]=Dsrc[t-1]
+	Ez=lin_func.M_Ez_Ez_from_Dz(Dz, Mat_map.M_Ez_Coef_Dz)
+	#print("Ez=",Ez)
+>>>>>>> Stashed changes
 
 	#im=Axes3D.plot_surface(X=X, Y=Y, Z=Ez,rstride=1, cstride=1)
 	#plt.colorbar()
