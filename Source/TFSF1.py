@@ -36,24 +36,28 @@ L=100
 W=100
 #set the size of a single grid
 # l=1
-
-e0=1
+#======parameters=======
+e0=2
+e1=1#different material
 mu0=1
-c0=1#wrong number for not explode
-
-e1=2#different material
-
+c0=2900000#wrong number for not explode
+fmax=5e3
+nmax=e1*mu0
+dx=dy=c0/fmax/nmax
+tau = 0.5/fmax
 #dt = 0.3e-8
-dt=(e1*mu0)**(1/2)*L/c0/2#originally 2 in the denominator changed to 5
-  
+dt=tau/10#originally 2 in the denominator changed to 5
 Mat_map=mat.Mat(L,W,dt)
 print(Mat_map.M_Ez_Coef_Ex)
 print(Mat_map.M_Ez_Coef_Ey)
 print(Mat_map.M_Ez_Coef_Hz)
 print(Mat_map.M_Ez_Coef_Dz)
     
-#Mat_map.add_mat_bond(0,int(L),int(W/2)-10,int(W/2),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
-#Mat_map.add_mat_bond(0,int(L/2),0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
+
+
+#======other material=======
+Mat_map.add_mat_bond(0,int(L),0,int(W),e0,mu0)#(i_i,i_f,j_i,j_f,e,mu)
+Mat_map.add_mat_bond(0,int(L/2),0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
 
 # dx=1e-6
 # dy=1e-6
@@ -62,37 +66,34 @@ print(Mat_map.M_Ez_Coef_Dz)
 # fmax=5e9
 # tau=0.5/fmax
 
-
 def function1(x):
-	return x-50
+	return x-20
 def function2(x):
-	return -1/50*x**2+40
+	return 2*x-70
 
-matbond_low=0
+matbond_low=20
 matbond_high=100
 #Mat_map.add_mat_bond_advanced(function1,matbond_low,matbond_high,e1,mu0)
 #Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
-dx=.1
-dy=.1
 
 
 
-
-tau   = 3.3e-8
+#======sources=======
 #step = 300;
 t0=5*tau
 tprop=1*(L*W)**(1/2)*(dx*dy)**(1/2)/c0
-t=t=2*t0+3*tprop
+t=2*t0+3*tprop
 step=int(np.ceil(t/dt))
 print(step)
 t=np.array(range(step-1))*dt
 # print(t)
 
 
-s=dx/(2*c0)+dt/2
+s=dx/2
+#+dt/2
 # print(t)
-nx_src=int(np.floor(15))
-ny_src=int(np.floor(15))
+nx_src=int(np.floor(30))
+ny_src=int(np.floor(30))
 A=-(Mat_map.e[nx_src-1,ny_src-1]/Mat_map.mu[nx_src-1,ny_src-1])**(1/2)
 
 Esrc=[]
@@ -143,10 +144,10 @@ sigDy=np.zeros([L,W])
 
 for i in range(L):
     for j in range(W):
-        sigHx[i,j]=sigx[i*2,j*2]
-        sigHy[i,j]=sigy[i*2,j*2]
-        sigHx1[i,j]=sigx[i*2+1,j*2+1]
-        sigHy1[i,j]=sigx[i*2+1,j*2+1]
+        sigHx[i,j]=sigx[i*2,j*2+1]
+        sigHy[i,j]=sigy[i*2,j*2+1]
+        sigHx1[i,j]=sigx[i*2+1,j*2]
+        sigHy1[i,j]=sigx[i*2+1,j*2]
         sigDx[i,j]=sigx[i*2,j*2]
         sigDy[i,j]=sigy[i*2,j*2]
         
@@ -189,7 +190,7 @@ ICEy=cp.deepcopy(Ex)
 IDz=cp.deepcopy(Ex)
 #inital condition
 
-fig =plt.figure(1)      # Create a figure
+fig =plt.figure()      # Create a figure
 ax1=plt.subplot(1,2,1)
 ax1.set_aspect('equal')
 ax1.set_xlim([0, W])
@@ -200,7 +201,7 @@ y2=[]
 for x_now in x:
     y1.append(function1(x_now))
     y2.append(function2(x_now))
-im_mat=ax1.plot(x,y1,x,y2)
+im_mat=ax1.plot(x,y1)
 
 plt.subplot(1,2,2)
       # Create a figure
@@ -224,115 +225,69 @@ ims=[]
 # >>>>>>> Stashed changes
 # while(n<100):
 # =======
-cont=0.05
 for t in range(step) :
-# 	#print(CEx)
+
  	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
 	#print("CEx=\n",CEx)
  	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
- 	for i in range(L):
-         CEx[i,ny_src-1]=(Ez[i,ny_src-1]-Ez[i,ny_src-2]-Esrc[t-1])/dy
+ 	
      
-	#print("CEy=\n",CEy)
+##====TFSF=====================================================================     
+#     for i in range(L):
+#         CEx[i,ny_src-1]=(Ez[i,ny_src-1]-Ez[i,ny_src-2]-Esrc[t-1])/dy
+#     
+#	#print("CEy=\n",CEy)
 # 	ICEx=ICEx+CEx
-# 	ICEy=ICEy+CEy
-#    
+# 	ICEy=ICEy+CEy 
 #    
 # 	Hx=mHx1*Hx+(mHx2*CEx+mHx3*ICEx)
-# 	#print(Hx)
+## 	#print(Hx)
 # 	Hy=mHy1*Hy+(mHy2*CEy+mHy3*ICEy)
-# 	#print(Hy)
+## 	#print(Hy)
 # 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
-#    
+# 	for i in range(L):
+#         CHz[i,ny_src-1]=(Hy[i,ny_src-1]-Hy[i-1,ny_src-1])/dx-(Hy[i,ny_src-1]-Hy[i,ny_src-2])/dy+Hsrc[t-1]/dy
+# 
 # 	IDz=Dz+IDz
-#    
-#
 # 	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
-# 	#add in source here
-# 	Dz[nx_src-1,ny_src-1]=Dz[nx_src-1,ny_src-1]+Dsrc[t-1]
-# 	#Dz[nx_src-1,ny_src-1]=Dsrc[t-1]
-# 	Ez=Dz/Mat_map.e
-# 	#print("Ez=",Ez)
+#====TFSF=====================================================================
+ 	
 
 
 
-
-
-
-
-	#CEx=cr.M_Ez_Curl_Ex(Ez,dy)
-	#print("CEx=\n",CEx)
-#	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
-	#print("CEy=\n",CEy)
- 	Hx=Hx-CEx*cont
-	#print("Hx=\n",Hx)
-#	Hy=Hy-lin_func.M_Ez_Hy_update(CEy,Mat_map.M_Ez_Coef_Ey)
- 	Hy=Hy-CEy*cont
-	
-	#print("Hy=\n",Hy)
+##====single source============================================================
+ 	ICEx=ICEx+CEx
+ 	ICEy=ICEy+CEy
+ 	Hx=mHx1*Hx+(mHx2*CEx+mHx3*ICEx)
+# 	#print(Hx)
+ 	Hy=mHy1*Hy+(mHy2*CEy+mHy3*ICEy)
+# 	#print(Hy)
  	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
- 	for i in range(L):
-         CHz[i,ny_src-1]=(Hy[i,ny_src-1]-Hy[i-1,ny_src-1])/dx-(Hy[i,ny_src-1]-Hy[i,ny_src-2])/dy+Hsrc[t-1]/dy
-     
-     
-	#print("CHz=\n",CHz)
-	#Dz=Dz+lin_func.M_Ez_Dz_update(CHz,Mat_map.M_Ez_Coef_Hz)
- 	Dz=Dz+CHz*cont
-	#print("Dz(nosource)=\n",Dz)
-	#print("SC=",Dsrc[t-1])
- 	#Dz[nx_src-1,ny_src-1]=Dsrc[t-1]+Dz[nx_src-1,ny_src-1]
-	#print("Dz(has source)=\n",Dz)
+ 	IDz=Dz+IDz
+ 	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
+ 	Dz[nx_src-1,ny_src-1]=Esrc[t-1]+Dz[nx_src-1,ny_src-1]
+##====single source============================================================
+
+
+
+
+
+
+
+
  	Ez=Dz/Mat_map.e
-	#print("EzNew=\n",Ez)
-#	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
-#	#print("CEx=\n",CEx)
-#	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
-#	#print("CEy=\n",CEy)
-#	#Hx=Hx+lin_func.M_Ez_Hx_update(CEx,Mat_map.M_Ez_Coef_Ex)
-#	Hx=Hx-CEx*cont
-#	#print("Hx=\n",Hx)
-#	#Hy=Hy+lin_func.M_Ez_Hy_update(CEy,Mat_map.M_Ez_Coef_Ey)
-#	Hy=Hy-CEy*cont
-#	
-#	#print("Hy=\n",Hy)
-#	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
-#	#print("CHz=\n",CHz)
-#	#Dz=Dz+lin_func.M_Ez_Dz_update(CHz,Mat_map.M_Ez_Coef_Hz)
-#	Dz=Dz+CHz*cont
-#	#print("Dz(nosource)=\n",Dz)
-#	#print("SC=",Dsrc[t-1])
-# 	Dz[nx_src-1,ny_src-1]=Dsrc[t-1]+Dz[nx_src-1,ny_src-1]
-#	#print("Dz(has source)=\n",Dz)
-#	Ez=Dz
-#	print("EzNew=\n",Ez)
+
  	im=plt.imshow(Ez, animated=True,origin='lower',interpolation="none")
-
-
+ 	
  	plt.hsv()
 
-	#im=Axes3D.plot_surface(X=X, Y=Y, Z=Ez,rstride=1, cstride=1)
-	#plt.colorbar()
  	ims.append([im])
-	#np.savetxt("Ez10.csv", Ez, delimiter=",")
+	
  	print(t)
 
-
-	#Update D from H
-	#Update E from D
-	#Handle E field boundary(boundary means edge, not material)
-	#Handle E field Source
-
-	#Update B from E
-	#Update H from B
-	#Handle H field Boundary
-	#Handle H field Source
-
-	#Record Some Data
-	#Simulate
-
-ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True,
+ani = animation.ArtistAnimation(fig, ims, interval=20, blit=True,
                                 repeat_delay=0)
-
+np.savetxt("e10.csv",Mat_map.e, delimiter=",")
 plt.show()
 
 
