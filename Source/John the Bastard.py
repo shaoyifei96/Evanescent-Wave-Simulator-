@@ -70,8 +70,7 @@ print(Mat_map.M_Ez_Coef_Dz)
 
 
 def function1(x):
-	#return -1/50*x**2+70
- 	return 50
+	return x-25
 def function2(x):
 	return -1/50*x**2+40
 
@@ -309,7 +308,7 @@ for t in range(step) :
 #	#print("Dz(has source)=\n",Dz)
 #	Ez=Dz
 #	print("EzNew=\n",Ez)
-	im=plt.imshow(Ez, animated=True,origin='lower',interpolation="none")
+	#im=plt.imshow(Ez, animated=True,origin='lower',interpolation="none")
 
 
 	plt.hot()
@@ -364,6 +363,6 @@ xx,yy=np.meshgrid(x,y)
 
 line=ax.plot_surface(xx,yy,Ezs[1][0])
 ax.set_zlim(-0.05, 0.08)
-#ani=animation.FuncAnimation(fig, data,frames=range(step),interval=30,repeat_delay=0,blit=False)
+ani=animation.FuncAnimation(fig, data,frames=range(step),interval=30,repeat_delay=0,blit=False)
 
 plt.show()
