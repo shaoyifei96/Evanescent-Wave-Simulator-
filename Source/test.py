@@ -42,10 +42,10 @@ mu0=1
 c0=299792458.0#wrong number for not explode
 
 
-e1=9.654187817e-12#different material
+e1=2#different material
 
-dt = 0.3e-8
-# dt=(e1*mu0)**(1/2)*L/c0/2#originally 2 in the denominator changed to 5
+#dt = 0.3e-8
+dt=(e0*mu0)**(1/2)*dx/c0/2#originally 2 in the denominator changed to 5
 
 Mat_map=mat.Mat(L,W,dt)
 print(Mat_map.M_Ez_Coef_Ex)
