@@ -39,7 +39,7 @@ W=100
 
 e0=1
 mu0=1
-c0=299792458.0#wrong number for not explode
+c0=299792458.0
 
 e1=10#different material
 
@@ -54,7 +54,7 @@ print(Mat_map.M_Ez_Coef_Dz)
     
 
 #Mat_map.add_mat_bond(0,int(L),int(W/2)-1,int(W/2),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
-Mat_map.add_mat_bond(0,int(L/2)-25,0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
+#Mat_map.add_mat_bond(0,int(L/2)-25,0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
 
 
 #Mat_map.add_mat_bond(0,int(L),int(W/2)-10,int(W/2),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
@@ -70,14 +70,15 @@ Mat_map.add_mat_bond(0,int(L/2)-25,0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
 
 
 def function1(x):
-	return -1/50*x**2+70
+	#return -1/50*x**2+70
+ 	return 50
 def function2(x):
 	return -1/50*x**2+40
 
 matbond_low=0
-matbond_high=60
+matbond_high=100
 Mat_map.add_mat_bond_advanced(function1,matbond_low,matbond_high,e1,mu0)
-Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
+#Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
 dx=.1
 dy=.1
 
@@ -89,7 +90,7 @@ dy=.1
 
 
 tau   = 3.3e-8
-step = 200;
+step = 500;
 t0=5*tau
 
 t=np.array(range(step-1))*dt
@@ -97,8 +98,8 @@ t=np.array(range(step-1))*dt
 
 
 
-nx_src=int(0.5*L)
-ny_src=int(0.5*W)
+nx_src=int(0.8*L)
+ny_src=int(0.2*W)
 Dsrc=[]
 
 for i in range(len(t)):  
@@ -203,8 +204,8 @@ y1=[]
 y2=[]
 for x_now in x:
     y1.append(function1(x_now))
-    y2.append(function2(x_now))
-im_mat=ax1.plot(x,y1,x,y2)
+    #y2.append(function2(x_now))
+im_mat=ax1.plot(y1,x)
 
 plt.subplot(1,3,2)
       # Create a figure
@@ -335,8 +336,7 @@ for t in range(step) :
 	#Record Some Data
 	#Simulate
 
-ani = animation.ArtistAnimation(fig, ims, interval=30, blit=True,
-                                repeat_delay=0)
+ani = animation.ArtistAnimation(fig, ims, interval=30, blit=True,repeat_delay=0)
 
 #plt.show()
 
@@ -363,6 +363,6 @@ xx,yy=np.meshgrid(x,y)
 
 line=ax.plot_surface(xx,yy,Ezs[1][0])
 ax.set_zlim(-0.05, 0.08)
-ani=animation.FuncAnimation(fig, data,frames=range(step),interval=30,repeat_delay=0,blit=False)
+#ani=animation.FuncAnimation(fig, data,frames=range(step),interval=30,repeat_delay=0,blit=False)
 
 plt.show()
