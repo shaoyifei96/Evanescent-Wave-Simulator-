@@ -37,7 +37,7 @@ W=100
 #set the size of a single grid
 # l=1
 #======parameters=======
-e0=2
+e0=10
 e1=1#different material
 mu0=1
 c0=2900000#wrong number for not explode
@@ -57,8 +57,8 @@ print(Mat_map.M_Ez_Coef_Dz)
 
 #======other material=======
 Mat_map.add_mat_bond(0,int(L),0,int(W),e0,mu0)#(i_i,i_f,j_i,j_f,e,mu)
-Mat_map.add_mat_bond(0,int(L/2),0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
-
+#Mat_map.add_mat_bond(0,int(L/2),0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
+#Mat_map.add_mat_bond(0,int(L/2)-15,0,int(W),e0,mu0)
 # dx=1e-6
 # dy=1e-6
 
@@ -67,13 +67,13 @@ Mat_map.add_mat_bond(0,int(L/2),0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
 # tau=0.5/fmax
 
 def function1(x):
-	return x-20
+	return -x+130
 def function2(x):
-	return 2*x-70
+	return -x+125
 
-matbond_low=20
+matbond_low=0
 matbond_high=100
-#Mat_map.add_mat_bond_advanced(function1,matbond_low,matbond_high,e1,mu0)
+Mat_map.add_mat_bond_advanced(function1,matbond_low,matbond_high,e1,mu0)
 #Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
 
 
@@ -84,16 +84,18 @@ t0=5*tau
 tprop=1*(L*W)**(1/2)*(dx*dy)**(1/2)/c0
 t=2*t0+3*tprop
 step=int(np.ceil(t/dt))
+print('step',step)
+tm.sleep(3)
 print(step)
 t=np.array(range(step-1))*dt
 # print(t)
 
 
-s=dx/2
+s=dx/2+dt/2
 #+dt/2
 # print(t)
-nx_src=int(np.floor(30))
-ny_src=int(np.floor(30))
+nx_src=int(np.floor(11))
+ny_src=int(np.floor(11))
 A=-(Mat_map.e[nx_src-1,ny_src-1]/Mat_map.mu[nx_src-1,ny_src-1])**(1/2)
 
 Esrc=[]
@@ -172,9 +174,6 @@ mDz4 = -(dt/e0**2)*sigDx*sigDy/mDz0
 print("mat=",Mat_map.e)
 #==================
 
-#======TEST PURPOSE 
-
-
 Ex=np.zeros((L,W),float)
 
 r,c=np.shape(Ex)
@@ -201,13 +200,12 @@ y2=[]
 for x_now in x:
     y1.append(function1(x_now))
     y2.append(function2(x_now))
-im_mat=ax1.plot(x,y1)
+im_mat=ax1.plot(y1,x,y2,x)
 
-plt.subplot(1,2,2)
+ani=plt.subplot(1,2,2)
       # Create a figure
 plt.gca().axes.get_xaxis().set_ticks([])  # Turn off x axis ticks
 plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
-plt.imshow(Ez)
 
      # Typical scale of wave (higher values are clipped)
 
@@ -233,39 +231,39 @@ for t in range(step) :
  	
      
 ##====TFSF=====================================================================     
-#     for i in range(L):
-#         CEx[i,ny_src-1]=(Ez[i,ny_src-1]-Ez[i,ny_src-2]-Esrc[t-1])/dy
-#     
-#	#print("CEy=\n",CEy)
-# 	ICEx=ICEx+CEx
-# 	ICEy=ICEy+CEy 
-#    
-# 	Hx=mHx1*Hx+(mHx2*CEx+mHx3*ICEx)
-## 	#print(Hx)
-# 	Hy=mHy1*Hy+(mHy2*CEy+mHy3*ICEy)
-## 	#print(Hy)
-# 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
-# 	for i in range(L):
-#         CHz[i,ny_src-1]=(Hy[i,ny_src-1]-Hy[i-1,ny_src-1])/dx-(Hy[i,ny_src-1]-Hy[i,ny_src-2])/dy+Hsrc[t-1]/dy
-# 
-# 	IDz=Dz+IDz
-# 	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
-#====TFSF=====================================================================
- 	
-
-
-
-##====single source============================================================
+ 	for i in range(L):
+         CEx[i,ny_src-1]=(Ez[i,ny_src-1]-Ez[i,ny_src-2]-Esrc[t-1])/dy
+     
+	#print("CEy=\n",CEy)
  	ICEx=ICEx+CEx
- 	ICEy=ICEy+CEy
+ 	ICEy=ICEy+CEy 
+    
  	Hx=mHx1*Hx+(mHx2*CEx+mHx3*ICEx)
 # 	#print(Hx)
  	Hy=mHy1*Hy+(mHy2*CEy+mHy3*ICEy)
 # 	#print(Hy)
  	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
+ 	for i in range(L):
+         CHz[i,ny_src-1]=(Hy[i,ny_src-1]-Hy[i-1,ny_src-1])/dx-(Hy[i,ny_src-1]-Hy[i,ny_src-2])/dy+Hsrc[t-1]/dy
+ 
  	IDz=Dz+IDz
  	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
- 	Dz[nx_src-1,ny_src-1]=Esrc[t-1]+Dz[nx_src-1,ny_src-1]
+#==============================================================================
+ 	
+
+
+
+##====single source============================================================
+# 	ICEx=ICEx+CEx
+# 	ICEy=ICEy+CEy
+# 	Hx=mHx1*Hx+(mHx2*CEx+mHx3*ICEx)
+## 	#print(Hx)
+# 	Hy=mHy1*Hy+(mHy2*CEy+mHy3*ICEy)
+## 	#print(Hy)
+# 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
+# 	IDz=Dz+IDz
+# 	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
+# 	Dz[nx_src-1,ny_src-1]=Esrc[t-1]+Dz[nx_src-1,ny_src-1]
 ##====single source============================================================
 
 
@@ -274,16 +272,15 @@ for t in range(step) :
 
 
 
-
+##====visualization============================================================
  	Ez=Dz/Mat_map.e
 
- 	im=plt.imshow(Ez, animated=True,origin='lower',interpolation="none")
- 	
- 	plt.hsv()
-
+ 	im=plt.imshow(Ez, origin='lower',animated=True,interpolation="bicubic")
+ 	plt.hsv
  	ims.append([im])
 	
  	print(t)
+##====visualization============================================================
 
 ani = animation.ArtistAnimation(fig, ims, interval=20, blit=True,
                                 repeat_delay=0)
