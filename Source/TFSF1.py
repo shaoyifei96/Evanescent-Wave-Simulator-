@@ -2,69 +2,49 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Apr 23 19:32:16 2017
-
-@author: wangleo
+@author: wangleo, shaoy
 """
-
 #The code should be developed from big picture to specific
 #steps, therefore we put files in folders, this main 
 #should not be edited, main is based on YOUTUBE:
 #https://www.youtube.com/watch?v=vVeyP85xKD4&t=8s
 
-#recommand using Sublime, Don't use Spyder, the tabs are 
-#different, it can cause problems
-
 #When import library or module ALWAYS import as
 #When code is in a folder use foldername.filename
-#e.g. import numpy as np
-#e.g. import plot as plt
 import math as ma
 import numpy as np
-import EH.Linear_Ops as lin_func#example of in_folder func
 import EH.Curl as cr
 import Initial_Material.Mat_Class as mat
 import copy as cp
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import time as tm
-import matplotlib.colors as clr
-from mpl_toolkits.mplot3d import Axes3D
+#from mpl_toolkits.mplot3d import Axes3D
 
 #set up the size of the map
 L=100
 W=100
-#set the size of a single grid
-# l=1
 #======parameters=======
-e0=3
-e1=1#different material
+e0=3#initial mateiral epsilon
+e1=1#thinner material to show Evanescant
 mu0=1
-c0=299792458.0#wrong number for not explode
-fmax=5e3
+c0=299792458.0
+fmax=5e3#highest frequesency of wave
 nmax=e1*mu0
-dx=dy=c0/fmax/nmax
+dx=dy=c0/fmax/nmax#grid size based on f and n
 tau = 0.5/fmax
-#dt = 0.3e-8
-dt=tau/10#originally 2 in the denominator changed to 5
-Mat_map=mat.Mat(L,W,dt)
+dt=tau/10
+Mat_map=mat.Mat(L,W,dt)#set up mateiral with values
 print(Mat_map.M_Ez_Coef_Ex)
 print(Mat_map.M_Ez_Coef_Ey)
 print(Mat_map.M_Ez_Coef_Hz)
 print(Mat_map.M_Ez_Coef_Dz)
-    
 
-
-#======other material=======
-Mat_map.add_mat_bond(0,int(L),0,int(W),e0,mu0)#(i_i,i_f,j_i,j_f,e,mu)
+#======different material=======
+Mat_map.add_mat_bond(0,int(L),0,int(W),e0,mu0)#(i_i,i_f,j_i,j_f,e,mu)#initialize to be some material
 #Mat_map.add_mat_bond(0,int(L/2),0,int(W),e1,mu0)#(i_i,i_f,j_i,j_f,e,mu)
 #Mat_map.add_mat_bond(0,int(L/2)-15,0,int(W),e0,mu0)
-# dx=1e-6
-# dy=1e-6
-
-# nmax=1
-# fmax=5e9
-# tau=0.5/fmax
-
+#Use a function to add material
 def function1(x):
 	return x+40
 def function2(x):
@@ -72,17 +52,15 @@ def function2(x):
 
 matbond_low=0
 matbond_high=100
+#material adds on the left of the specified function
 Mat_map.add_mat_bond_advanced(function1,matbond_low,matbond_high,e1,mu0)
 Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
 
-
-
-#======sources=======
-#step = 300;
-t0=5*tau
+#======sources of wave=======
+t0=5*tau#
 tprop=1*(L*W)**(1/2)*(dx*dy)**(1/2)/c0
 t=2*t0+3*tprop
-step=int(np.ceil(t/dt))
+step=int(np.ceil(t/dt))#step is defined so there are 10 propogations
 print('step',step)
 tm.sleep(3)
 print(step)
@@ -167,7 +145,7 @@ mDz2 = c0/mDz0
 mDz4 = -(dt/e0**2)*sigDx*sigDy/mDz0
 
 #
-#==================TEST for material class, you can add a block of material in 2d
+#==================
 
 
 print("mat=",Mat_map.e)
@@ -208,20 +186,10 @@ plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
 
      # Typical scale of wave (higher values are clipped)
 
-
-
-
-#
-  
 #======DO NOT USE FOR FINAL
 
-# <<<<<<< Updated upstream
 ims=[]
-# <<<<<<< HEAD
-# =======
-# >>>>>>> Stashed changes
-# while(n<100):
-# =======
+
 for t in range(3000) :
 
  	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
@@ -231,6 +199,7 @@ for t in range(3000) :
      
 ##====TFSF=====================================================================     
  	for i in range(L):
+         
          CEx[i,ny_src-1]=(Ez[i,ny_src-1]-Ez[i,ny_src-2]-Esrc[t-1])/dy
      
 	#print("CEy=\n",CEy)
@@ -274,8 +243,7 @@ for t in range(3000) :
 ##====visualization============================================================
  	Ez=Dz/Mat_map.e
 
- 	im=plt.imshow(Ez, origin='lower',animated=True,interpolation="none")
- 	plt.hsv
+ 	im=plt.imshow(Ez, origin='lower',animated=True,interpolation="none",cmap="coolwarm")
  	ims.append([im])
 	
  	print(t)
