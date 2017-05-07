@@ -29,8 +29,8 @@ import matplotlib.animation as animation
 import time as tm
 import matplotlib.colors as clr
 from mpl_toolkits.mplot3d import Axes3D
-Writer = animation.writers['ffmpeg']
-writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
+from IPython.display import HTML
+
 
 #set up the size of the map
 L=100
@@ -285,7 +285,7 @@ for t in range(100) :
 
 ani = animation.ArtistAnimation(fig, ims, interval=20, blit=True,
                                 repeat_delay=0)
-ani.save('im.mp4', writer=writer)
+HTML(ani.to_html5_video())
 plt.show()
 
 
