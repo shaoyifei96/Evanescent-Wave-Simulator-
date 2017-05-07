@@ -36,10 +36,10 @@ W=100
 #set the size of a single grid
 # l=1
 #======parameters=======
-e0=299792458.0
+e0=3
 e1=1#different material
 mu0=1
-c0=2900000#wrong number for not explode
+c0=299792458.0#wrong number for not explode
 fmax=5e3
 nmax=e1*mu0
 dx=dy=c0/fmax/nmax
@@ -66,14 +66,14 @@ Mat_map.add_mat_bond(0,int(L),0,int(W),e0,mu0)#(i_i,i_f,j_i,j_f,e,mu)
 # tau=0.5/fmax
 
 def function1(x):
-	return -x+130
+	return x+40
 def function2(x):
-	return -x+100
+	return x+30
 
 matbond_low=0
 matbond_high=100
 Mat_map.add_mat_bond_advanced(function1,matbond_low,matbond_high,e1,mu0)
-#Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
+Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
 
 
 
@@ -199,7 +199,7 @@ y2=[]
 for x_now in x:
     y1.append(function1(x_now))
     y2.append(function2(x_now))
-im_mat=ax1.plot(y1,x)
+im_mat=ax1.plot(y1,x,y2,x)
 
 ani=plt.subplot(1,2,2)
       # Create a figure
@@ -274,7 +274,7 @@ for t in range(3000) :
 ##====visualization============================================================
  	Ez=Dz/Mat_map.e
 
- 	im=plt.imshow(Ez, origin='lower',animated=True,interpolation="bicubic")
+ 	im=plt.imshow(Ez, origin='lower',animated=True,interpolation="none")
  	plt.hsv
  	ims.append([im])
 	
