@@ -29,8 +29,6 @@ import matplotlib.animation as animation
 import time as tm
 import matplotlib.colors as clr
 from mpl_toolkits.mplot3d import Axes3D
-from IPython.display import HTML
-
 
 #set up the size of the map
 L=100
@@ -38,7 +36,7 @@ W=100
 #set the size of a single grid
 # l=1
 #======parameters=======
-e0=10
+e0=299792458.0
 e1=1#different material
 mu0=1
 c0=2900000#wrong number for not explode
@@ -70,7 +68,7 @@ Mat_map.add_mat_bond(0,int(L),0,int(W),e0,mu0)#(i_i,i_f,j_i,j_f,e,mu)
 def function1(x):
 	return -x+130
 def function2(x):
-	return -x+125
+	return -x+100
 
 matbond_low=0
 matbond_high=100
@@ -201,7 +199,7 @@ y2=[]
 for x_now in x:
     y1.append(function1(x_now))
     y2.append(function2(x_now))
-im_mat=ax1.plot(y1,x,y2,x)
+im_mat=ax1.plot(y1,x)
 
 ani=plt.subplot(1,2,2)
       # Create a figure
@@ -224,7 +222,7 @@ ims=[]
 # >>>>>>> Stashed changes
 # while(n<100):
 # =======
-for t in range(100) :
+for t in range(3000) :
 
  	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
 	#print("CEx=\n",CEx)
@@ -285,7 +283,7 @@ for t in range(100) :
 
 ani = animation.ArtistAnimation(fig, ims, interval=20, blit=True,
                                 repeat_delay=0)
-HTML(ani.to_html5_video())
+
 plt.show()
 
 
