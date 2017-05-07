@@ -29,7 +29,8 @@ import matplotlib.animation as animation
 import time as tm
 import matplotlib.colors as clr
 from mpl_toolkits.mplot3d import Axes3D
-
+Writer = animation.writers['ffmpeg']
+writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
 
 #set up the size of the map
 L=100
@@ -223,7 +224,7 @@ ims=[]
 # >>>>>>> Stashed changes
 # while(n<100):
 # =======
-for t in range(step) :
+for t in range(100) :
 
  	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
 	#print("CEx=\n",CEx)
@@ -284,7 +285,7 @@ for t in range(step) :
 
 ani = animation.ArtistAnimation(fig, ims, interval=20, blit=True,
                                 repeat_delay=0)
-np.savetxt("e10.csv",Mat_map.e, delimiter=",")
+ani.save('im.mp4', writer=writer)
 plt.show()
 
 
