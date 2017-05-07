@@ -308,7 +308,7 @@ for t in range(step) :
 #	#print("Dz(has source)=\n",Dz)
 #	Ez=Dz
 #	print("EzNew=\n",Ez)
-	#im=plt.imshow(Ez, animated=True,origin='lower',interpolation="none")
+	im=plt.imshow(Ez, animated=True,origin='lower',interpolation="none")
 
 
 	plt.hot()

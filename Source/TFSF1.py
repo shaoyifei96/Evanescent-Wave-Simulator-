@@ -80,7 +80,7 @@ Hsrc=[]
 for i in range(len(t)):  
     Esrc.append(ma.exp(-((t[i]-t0)/tau)**2))
     Hsrc.append(A*ma.exp(-((t[i]-t0)/tau+s)**2))
-
+####################3Source end
 
 #setup, the following code should run once
 #Set Initial Conditions
@@ -145,7 +145,7 @@ mDz2 = c0/mDz0
 mDz4 = -(dt/e0**2)*sigDx*sigDy/mDz0
 
 #
-#==================
+#==================PML END
 
 
 print("mat=",Mat_map.e)
@@ -247,7 +247,7 @@ for t in range(3000) :
  	ims.append([im])
 	
  	print(t)
-##====visualization============================================================
+##====Animation============================================================
 
 ani = animation.ArtistAnimation(fig, ims, interval=20, blit=True,
                                 repeat_delay=0)
