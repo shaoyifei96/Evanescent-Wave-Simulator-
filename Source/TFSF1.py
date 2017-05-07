@@ -24,6 +24,7 @@ import time as tm
 #set up the size of the map
 L=100
 W=100
+frames=800
 #======parameters=======
 e0=3#initial mateiral epsilon
 e1=1#thinner material to show Evanescant
@@ -190,7 +191,7 @@ plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
 
 ims=[]
 
-for t in range(3000) :
+for t in range(frames) :
 
  	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
 	#print("CEx=\n",CEx)
