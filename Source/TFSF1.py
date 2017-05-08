@@ -24,7 +24,7 @@ import time as tm
 #set up the size of the map
 L=100
 W=100
-frames=800
+frames=3000
 #======parameters=======
 e0=3#initial mateiral epsilon
 e1=1#thinner material to show Evanescant
@@ -72,8 +72,8 @@ t=np.array(range(step-1))*dt
 s=dx/2+dt/2
 #+dt/2
 # print(t)
-nx_src=int(np.floor(11))
-ny_src=int(np.floor(11))
+nx_src=int(np.floor(30))
+ny_src=int(np.floor(30))
 A=-(Mat_map.e[nx_src-1,ny_src-1]/Mat_map.mu[nx_src-1,ny_src-1])**(1/2)
 
 Esrc=[]
@@ -199,40 +199,40 @@ for t in range(frames) :
  	
      
 ##====TFSF=====================================================================     
- 	for i in range(L):
-         
-         CEx[i,ny_src-1]=(Ez[i,ny_src-1]-Ez[i,ny_src-2]-Esrc[t-1])/dy
-     
-	#print("CEy=\n",CEy)
- 	ICEx=ICEx+CEx
- 	ICEy=ICEy+CEy 
-    
- 	Hx=mHx1*Hx+(mHx2*CEx+mHx3*ICEx)
-# 	#print(Hx)
- 	Hy=mHy1*Hy+(mHy2*CEy+mHy3*ICEy)
-# 	#print(Hy)
- 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
- 	for i in range(L):
-         CHz[i,ny_src-1]=(Hy[i,ny_src-1]-Hy[i-1,ny_src-1])/dx-(Hy[i,ny_src-1]-Hy[i,ny_src-2])/dy+Hsrc[t-1]/dy
- 
- 	IDz=Dz+IDz
- 	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
+# 	for i in range(L):
+#         
+#         CEx[i,ny_src-1]=(Ez[i,ny_src-1]-Ez[i,ny_src-2]-Esrc[t-1])/dy
+#     
+#	#print("CEy=\n",CEy)
+# 	ICEx=ICEx+CEx
+# 	ICEy=ICEy+CEy 
+#    
+# 	Hx=mHx1*Hx+(mHx2*CEx+mHx3*ICEx)
+## 	#print(Hx)
+# 	Hy=mHy1*Hy+(mHy2*CEy+mHy3*ICEy)
+## 	#print(Hy)
+# 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
+# 	for i in range(L):
+#         CHz[i,ny_src-1]=(Hy[i,ny_src-1]-Hy[i-1,ny_src-1])/dx-(Hy[i,ny_src-1]-Hy[i,ny_src-2])/dy+Hsrc[t-1]/dy
+# 
+# 	IDz=Dz+IDz
+# 	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
 #==============================================================================
  	
 
 
 
 ##====single source============================================================
-# 	ICEx=ICEx+CEx
-# 	ICEy=ICEy+CEy
-# 	Hx=mHx1*Hx+(mHx2*CEx+mHx3*ICEx)
-## 	#print(Hx)
-# 	Hy=mHy1*Hy+(mHy2*CEy+mHy3*ICEy)
-## 	#print(Hy)
-# 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
-# 	IDz=Dz+IDz
-# 	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
-# 	Dz[nx_src-1,ny_src-1]=Esrc[t-1]+Dz[nx_src-1,ny_src-1]
+ 	ICEx=ICEx+CEx
+ 	ICEy=ICEy+CEy
+ 	Hx=mHx1*Hx+(mHx2*CEx+mHx3*ICEx)
+# 	#print(Hx)
+ 	Hy=mHy1*Hy+(mHy2*CEy+mHy3*ICEy)
+# 	#print(Hy)
+ 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
+ 	IDz=Dz+IDz
+ 	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
+ 	Dz[nx_src-1,ny_src-1]=Esrc[t-1]+Dz[nx_src-1,ny_src-1]
 ##====single source============================================================
 
 
@@ -244,7 +244,8 @@ for t in range(frames) :
 ##====visualization============================================================
  	Ez=Dz/Mat_map.e
 
- 	im=plt.imshow(Ez, origin='lower',animated=True,interpolation="none",cmap="coolwarm")
+ 	im=plt.imshow(Ez, origin='lower',animated=True,interpolation="none")
+ 	plt.hsv()
  	ims.append([im])
 	
  	print(t)
