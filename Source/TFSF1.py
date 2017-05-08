@@ -26,7 +26,7 @@ L=100
 W=100
 frames=3000
 #======parameters=======
-e0=3#initial mateiral epsilon
+e0=100#initial mateiral epsilon
 e1=1#thinner material to show Evanescant
 mu0=1
 c0=299792458.0
@@ -55,7 +55,7 @@ matbond_low=0
 matbond_high=100
 #material adds on the left of the specified function
 Mat_map.add_mat_bond_advanced(function1,matbond_low,matbond_high,e1,mu0)
-Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
+#Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
 
 #======sources of wave=======
 t0=5*tau#
@@ -178,7 +178,7 @@ y2=[]
 for x_now in x:
     y1.append(function1(x_now))
     y2.append(function2(x_now))
-im_mat=ax1.plot(y1,x,y2,x)
+im_mat=ax1.plot(y1,x)
 
 ani=plt.subplot(1,2,2)
       # Create a figure
@@ -199,40 +199,40 @@ for t in range(frames) :
  	
      
 ##====TFSF=====================================================================     
-# 	for i in range(L):
-#         
-#         CEx[i,ny_src-1]=(Ez[i,ny_src-1]-Ez[i,ny_src-2]-Esrc[t-1])/dy
-#     
-#	#print("CEy=\n",CEy)
-# 	ICEx=ICEx+CEx
-# 	ICEy=ICEy+CEy 
-#    
-# 	Hx=mHx1*Hx+(mHx2*CEx+mHx3*ICEx)
-## 	#print(Hx)
-# 	Hy=mHy1*Hy+(mHy2*CEy+mHy3*ICEy)
-## 	#print(Hy)
-# 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
-# 	for i in range(L):
-#         CHz[i,ny_src-1]=(Hy[i,ny_src-1]-Hy[i-1,ny_src-1])/dx-(Hy[i,ny_src-1]-Hy[i,ny_src-2])/dy+Hsrc[t-1]/dy
-# 
-# 	IDz=Dz+IDz
-# 	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
+ 	for i in range(L):
+         
+         CEx[i,ny_src-1]=(Ez[i,ny_src-1]-Ez[i,ny_src-2]-Esrc[t-1])/dy
+     
+	#print("CEy=\n",CEy)
+ 	ICEx=ICEx+CEx
+ 	ICEy=ICEy+CEy 
+    
+ 	Hx=mHx1*Hx+(mHx2*CEx+mHx3*ICEx)
+# 	#print(Hx)
+ 	Hy=mHy1*Hy+(mHy2*CEy+mHy3*ICEy)
+# 	#print(Hy)
+ 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
+ 	for i in range(L):
+         CHz[i,ny_src-1]=(Hy[i,ny_src-1]-Hy[i-1,ny_src-1])/dx-(Hy[i,ny_src-1]-Hy[i,ny_src-2])/dy+Hsrc[t-1]/dy
+ 
+ 	IDz=Dz+IDz
+ 	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
 #==============================================================================
  	
 
 
 
 ##====single source============================================================
- 	ICEx=ICEx+CEx
- 	ICEy=ICEy+CEy
- 	Hx=mHx1*Hx+(mHx2*CEx+mHx3*ICEx)
-# 	#print(Hx)
- 	Hy=mHy1*Hy+(mHy2*CEy+mHy3*ICEy)
-# 	#print(Hy)
- 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
- 	IDz=Dz+IDz
- 	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
- 	Dz[nx_src-1,ny_src-1]=Esrc[t-1]+Dz[nx_src-1,ny_src-1]
+# 	ICEx=ICEx+CEx
+# 	ICEy=ICEy+CEy
+# 	Hx=mHx1*Hx+(mHx2*CEx+mHx3*ICEx)
+## 	#print(Hx)
+# 	Hy=mHy1*Hy+(mHy2*CEy+mHy3*ICEy)
+## 	#print(Hy)
+# 	CHz=cr.M_Ez_Curl_Hz(Hx, Hy, dx, dy)
+# 	IDz=Dz+IDz
+# 	Dz=mDz1*Dz+mDz2*CHz+mDz4*IDz
+# 	Dz[nx_src-1,ny_src-1]=Esrc[t-1]+Dz[nx_src-1,ny_src-1]
 ##====single source============================================================
 
 
@@ -244,7 +244,7 @@ for t in range(frames) :
 ##====visualization============================================================
  	Ez=Dz/Mat_map.e
 
- 	im=plt.imshow(Ez, origin='lower',animated=True,interpolation="none")
+ 	im=plt.imshow(Ez, origin='lower',animated=True,interpolation="bicubic")
  	plt.hsv()
  	ims.append([im])
 	
