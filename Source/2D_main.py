@@ -19,23 +19,17 @@ import copy as cp
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import time as tm
-<<<<<<< HEAD:Source/TFSF1.py
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import cm
-=======
+import PML.PMLX as pml
 from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D#do not delete, important for 3D
->>>>>>> origin/master:Source/2D_main.py
 #from mpl_toolkits.mplot3d import Axes3D
 
 #set up the size of the map
 L=100
 W=100
-<<<<<<< HEAD:Source/TFSF1.py
-frames=300
-=======
-frames=3200
->>>>>>> origin/master:Source/2D_main.py
+
+frames=320
+
 #======parameters=======
 e0=100#initial mateiral epsilon
 e1=1#thinner material to show Evanescant
@@ -98,64 +92,8 @@ for i in range(len(t)):
 #Set Initial Conditions
 #Set Material Property
 #set the PML parameters
-PML=[10,10,10,10]
-
-W2=2*W
-L2=2*L
-
-sigx=np.zeros([L2,W2])
-print(sigx)
-for nx in range(2*PML[0]):
-    nx1=2*PML[0]-nx;
-    for i in range(W2):
-        sigx[nx1-1,i]=(0.5*e0/dt)*(nx/2/PML[0])**3
-for nx in range(2*PML[1]):
-    nx1=L2-2*PML[1]+nx+1;
-    for i in range(W2):
-        sigx[nx1-1,i]=(0.5*e0/dt)*(nx/2/PML[1])**3
-
-sigy=np.zeros([L2,W2])
-for ny in range(2*PML[2]):
-    ny1=2*PML[2]-ny;
-    for i in range(L2):
-        sigy[i,ny1-1]=(0.5*e0/dt)*(ny/2/PML[2])**3
-for ny in range(2*PML[3]):
-    ny1=W2-2*PML[3]+ny+1;
-    for i in range(L2):
-        sigy[i,ny1-1]=(0.5*e0/dt)*(ny/2/PML[3])**3
-
-
-sigHx=np.zeros([L,W])
-sigHy=np.zeros([L,W])
-sigHx1=np.zeros([L,W])
-sigHy1=np.zeros([L,W])
-sigDx=np.zeros([L,W])
-sigDy=np.zeros([L,W])
-
-
-for i in range(L):
-    for j in range(W):
-        sigHx[i,j]=sigx[i*2,j*2+1]
-        sigHy[i,j]=sigy[i*2,j*2+1]
-        sigHx1[i,j]=sigx[i*2+1,j*2]
-        sigHy1[i,j]=sigx[i*2+1,j*2]
-        sigDx[i,j]=sigx[i*2,j*2]
-        sigDy[i,j]=sigy[i*2,j*2]
-        
-mHx0 = (1/dt) + sigHy/(2*e0)
-mHx1 = ((1/dt) - sigHy/(2*e0))/mHx0
-mHx2 = -c0/mu0/mHx0
-mHx3 = -(c0*dt/e0)*sigHx/mu0/mHx0
-mHy0 = (1/dt) + sigHx1/(2*e0)
-mHy1 = ((1/dt) - sigHx1/(2*e0))/mHy0
-mHy2 = -c0/mu0/mHy0
-mHy3 = -(c0*dt/e0)*sigHy1/mu0/mHy0
-mDz0 = (1/dt)+(sigDx + sigDy)/(2*e0)+sigDx*sigDy*(dt/4/e0**2)
-mDz1 = (1/dt)-(sigDx + sigDy)/(2*e0)-sigDx*sigDy*(dt/4/e0**2)
-mDz1 = mDz1/ mDz0
-mDz2 = c0/mDz0
-mDz4 = -(dt/e0**2)*sigDx*sigDy/mDz0
-
+PMLx=[10,10,10,10]
+mHx0,mHx1,mHx2,mHx3,mHy0,mHy1,mHy2,mHy3,mDz0,mDz1,mDz2,mDz4=pml.pmlx(PMLx,L,W,dt)
 #
 #==================PML END
 
@@ -255,11 +193,8 @@ for t in range(frames) :
 ##====visualization============================================================
  	Ez=Dz/Mat_map.e
 
-<<<<<<< HEAD:Source/TFSF1.py
- 	im=plt.imshow(Ez, origin='lower',animated=True,interpolation="bicubic")
-=======
 # 	im=plt.imshow(Ez, origin='lower',animated=True,interpolation="none")
->>>>>>> origin/master:Source/2D_main.py
+
  	plt.hsv()
 # 	ims.append([im])
  	Ezs.append([Ez])

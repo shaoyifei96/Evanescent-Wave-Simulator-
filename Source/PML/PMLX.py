@@ -1,6 +1,6 @@
 import numpy as np
 
-def pmlx(PML,W,L):
+def pmlx(PML,W,L,dt):
     #set the PML parameters
     e0=1
     mu0=1
@@ -61,4 +61,4 @@ def pmlx(PML,W,L):
     mDz2 = c0/mDz0
     mDz4 = -(dt/e0**2)*sigDx*sigDy/mDz0
 
-return mHx0,mHx1,mHx2,mHx3,mHy0,mHy1,mHy2,mHy3,mDz0,mDz1,mDz1,mDz2,mDz4
+    return mHx0,mHx1,mHx2,mHx3,mHy0,mHy1,mHy2,mHy3,mDz0,mDz1,mDz2,mDz4
