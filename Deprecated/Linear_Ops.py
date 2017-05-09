@@ -1,3 +1,7 @@
+#linear ops just multiply the  constant with the field
+#this was deprecated because the perfect matching layer require
+#a tensor which is different from linear ops 
+
 import numpy as np
 #Ez mode
 def M_Ez_Hx_update(CEx,CEx_coeff):

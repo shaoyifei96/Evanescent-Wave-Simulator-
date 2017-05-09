@@ -1,6 +1,9 @@
 #source file
 #two kinds: 
-#1. point source
+#1. Gaussian source for just E
+#2. Gaussian Source with E and H beacuase it needs to Have both to cancle 
+#out the field going backward
+
 import numpy as np
 import math  as ma
 
@@ -21,12 +24,9 @@ def Gaus_E_H(nx_src,ny_src,tau,L,W,dx,dy,c0,dt,Mat_map):
 	step=int(np.ceil(t/dt))#step is defined so there are 10 propogations
 	print('step',step)
 	t=np.array(range(step-1))*dt
-# print(t)
-
 
 	s=dx/2+dt/2
-#+dt/2
-# print(t)
+
 
 	A=-(Mat_map.e[nx_src-1,ny_src-1]/Mat_map.mu[nx_src-1,ny_src-1])**(1/2)
 

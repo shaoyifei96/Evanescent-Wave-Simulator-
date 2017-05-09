@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Apr  9 22:07:40 2017
-
+going from 1D - 2D we want to try 1D first to see if the update
+equations make sense, hence this file
 @author: wangleo
 """
 from math import floor,ceil,exp

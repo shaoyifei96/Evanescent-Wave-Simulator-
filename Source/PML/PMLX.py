@@ -1,3 +1,7 @@
+#PML boundary by matching each next layer to be a perfect aborbant
+#of the previous layer
+
+
 import numpy as np
 
 def pmlx(PML,W,L,dt):

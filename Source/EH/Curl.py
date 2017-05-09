@@ -1,3 +1,7 @@
+#curl equations subtract the two ajacent Ey and divide by distance in between
+#do it in both x and y dir, after that, doing the curl of 4 H will
+#generate the new E
+
 import numpy as np
 
 def M_Ez_Curl_Ex(Ez,dy):#curl of E pointing in z dir 
