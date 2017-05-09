@@ -36,4 +36,4 @@ def Gaus_E_H(nx_src,ny_src,tau,L,W,dx,dy,c0,dt,Mat_map):
 		Esrc.append(ma.exp(-((t[i]-t0)/tau)**2))
 		Hsrc.append(A*ma.exp(-((t[i]-t0)/tau+s)**2))
 
-	return Esrc,Hsrc
+	return Esrc,Hsrc,step

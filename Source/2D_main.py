@@ -22,14 +22,16 @@ import matplotlib.animation as animation
 import time as tm
 from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D#do not delete, important for 3D
-#from mpl_toolkits.mplot3d import Axes3D
+
 
 #set up the size of the map
 L=100
 W=100
+
 frames=100
+
 #======parameters=======
-e0=3#initial mateiral epsilon
+e0=100#initial mateiral epsilon
 e1=1#thinner material to show Evanescant
 mu0=1
 c0=299792458.0
@@ -58,12 +60,12 @@ matbond_low=0
 matbond_high=100
 #material adds on the left of the specified function
 Mat_map.add_mat_bond_advanced(function1,matbond_low,matbond_high,e1,mu0)
-Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
+#Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
 
 #======sources of wave=======
 nx_src=int(np.floor(30))
 ny_src=int(np.floor(30))
-Esrc,Hsrc=src.Gaus_E_H(nx_src,ny_src,tau,L,W,dx,dy,c0,dt,Mat_map)
+Esrc,Hsrc,step=src.Gaus_E_H(nx_src,ny_src,tau,L,W,dx,dy,c0,dt,Mat_map)
 ####################3Source end
 
 #setup, the following code should run once
@@ -161,7 +163,7 @@ y2=[]
 for x_now in x:
     y1.append(function1(x_now))
     y2.append(function2(x_now))
-im_mat=ax1.plot(y1,x,y2,x)
+im_mat=ax1.plot(y1,x)
 
 #ani=plt.subplot(1,2,2)
       # Create a figure
@@ -227,7 +229,10 @@ for t in range(frames) :
 ##====visualization============================================================
  	Ez=Dz/Mat_map.e
 
-# 	im=plt.imshow(Ez, origin='lower',animated=True,interpolation="none")
+
+ 	im=plt.imshow(Ez, origin='lower',animated=True,interpolation="bicubic")
+
+
  	plt.hsv()
 # 	ims.append([im])
  	Ezs.append([Ez])
@@ -262,6 +267,32 @@ line=ax.plot_surface(xx,yy,Ezs[1][0])
 ax.set_zlim(-0.05, 0.08)
 ani=animation.FuncAnimation(fig, data,frames=range(frames),interval=30,repeat_delay=0,blit=False)
 
+def data(i):
+	#print(i)
+	ax.clear()
+
+	line=ax.plot_surface(xx,yy,Ezs[i][0],cmap=cm.coolwarm)
+	ax.set_zlim(-0.05, 0.08)
+
+	return line,
+
+print("Ezs=",np.shape(Ezs))
+
+
+ax=fig.add_subplot(133,projection="3d")
+
+
+x=range(W)
+y=range(L)
+xx,yy=np.meshgrid(x,y)
+
+
+
+line=ax.plot_surface(xx,yy,Ezs[1][0])
+ax.set_zlim(-0.05, 0.08)
+ani=animation.FuncAnimation(fig, data,frames=range(step),interval=30,repeat_delay=0,blit=False)
+
+#plt.show()
 plt.show()
 
 
