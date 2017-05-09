@@ -19,12 +19,14 @@ import copy as cp
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import time as tm
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 #from mpl_toolkits.mplot3d import Axes3D
 
 #set up the size of the map
 L=100
 W=100
-frames=3000
+frames=300
 #======parameters=======
 e0=100#initial mateiral epsilon
 e1=1#thinner material to show Evanescant
@@ -190,7 +192,7 @@ plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
 #======DO NOT USE FOR FINAL
 
 ims=[]
-
+Ezs=[]
 for t in range(frames) :
 
  	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
@@ -254,6 +256,32 @@ for t in range(frames) :
 ani = animation.ArtistAnimation(fig, ims, interval=20, blit=True,
                                 repeat_delay=0)
 
+def data(i):
+	#print(i)
+	ax.clear()
+
+	line=ax.plot_surface(xx,yy,Ezs[i][0],cmap=cm.coolwarm)
+	ax.set_zlim(-0.05, 0.08)
+
+	return line,
+
+print("Ezs=",np.shape(Ezs))
+
+
+ax=fig.add_subplot(133,projection="3d")
+
+
+x=range(W)
+y=range(L)
+xx,yy=np.meshgrid(x,y)
+
+
+
+line=ax.plot_surface(xx,yy,Ezs[1][0])
+ax.set_zlim(-0.05, 0.08)
+ani=animation.FuncAnimation(fig, data,frames=range(step),interval=30,repeat_delay=0,blit=False)
+
+#plt.show()
 plt.show()
 
 
