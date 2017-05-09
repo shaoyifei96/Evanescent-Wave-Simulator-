@@ -6,8 +6,7 @@ Created on Sun Apr 23 19:32:16 2017
 """
 #The code should be developed from big picture to specific
 #steps, therefore we put files in folders, this main 
-#should not be edited, main is based on YOUTUBE:
-#https://www.youtube.com/watch?v=vVeyP85xKD4&t=8s
+#only handle constant, update, animation 
 
 #When import library or module ALWAYS import as
 #When code is in a folder use foldername.filename
@@ -18,16 +17,16 @@ import Wave_Source.source as src
 import copy as cp
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import PML.PMLX as pml
 from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D#do not delete, important for 3D
-
+#from mpl_toolkits.mplot3d import Axes3D
 
 #set up the size of the map
 L=100
 W=100
 
-frames=100
-
+#frames=320 #frames hsould always show 10 wave propogation,this is not necessary anymore.
 #======parameters=======
 e0=100#initial mateiral epsilon
 e1=1#thinner material to show Evanescant
@@ -72,64 +71,8 @@ Esrc,Hsrc,step=src.Gaus_E_H(nx_src,ny_src,tau,L,W,dx,dy,c0,dt,Mat_map)
 #Set Initial Conditions
 #Set Material Property
 #set the PML parameters
-PML=[10,10,10,10]
-
-W2=2*W
-L2=2*L
-
-sigx=np.zeros([L2,W2])
-print(sigx)
-for nx in range(2*PML[0]):
-    nx1=2*PML[0]-nx;
-    for i in range(W2):
-        sigx[nx1-1,i]=(0.5*e0/dt)*(nx/2/PML[0])**3
-for nx in range(2*PML[1]):
-    nx1=L2-2*PML[1]+nx+1;
-    for i in range(W2):
-        sigx[nx1-1,i]=(0.5*e0/dt)*(nx/2/PML[1])**3
-
-sigy=np.zeros([L2,W2])
-for ny in range(2*PML[2]):
-    ny1=2*PML[2]-ny;
-    for i in range(L2):
-        sigy[i,ny1-1]=(0.5*e0/dt)*(ny/2/PML[2])**3
-for ny in range(2*PML[3]):
-    ny1=W2-2*PML[3]+ny+1;
-    for i in range(L2):
-        sigy[i,ny1-1]=(0.5*e0/dt)*(ny/2/PML[3])**3
-
-
-sigHx=np.zeros([L,W])
-sigHy=np.zeros([L,W])
-sigHx1=np.zeros([L,W])
-sigHy1=np.zeros([L,W])
-sigDx=np.zeros([L,W])
-sigDy=np.zeros([L,W])
-
-
-for i in range(L):
-    for j in range(W):
-        sigHx[i,j]=sigx[i*2,j*2+1]
-        sigHy[i,j]=sigy[i*2,j*2+1]
-        sigHx1[i,j]=sigx[i*2+1,j*2]
-        sigHy1[i,j]=sigx[i*2+1,j*2]
-        sigDx[i,j]=sigx[i*2,j*2]
-        sigDy[i,j]=sigy[i*2,j*2]
-        
-mHx0 = (1/dt) + sigHy/(2*e0)
-mHx1 = ((1/dt) - sigHy/(2*e0))/mHx0
-mHx2 = -c0/mu0/mHx0
-mHx3 = -(c0*dt/e0)*sigHx/mu0/mHx0
-mHy0 = (1/dt) + sigHx1/(2*e0)
-mHy1 = ((1/dt) - sigHx1/(2*e0))/mHy0
-mHy2 = -c0/mu0/mHy0
-mHy3 = -(c0*dt/e0)*sigHy1/mu0/mHy0
-mDz0 = (1/dt)+(sigDx + sigDy)/(2*e0)+sigDx*sigDy*(dt/4/e0**2)
-mDz1 = (1/dt)-(sigDx + sigDy)/(2*e0)-sigDx*sigDy*(dt/4/e0**2)
-mDz1 = mDz1/ mDz0
-mDz2 = c0/mDz0
-mDz4 = -(dt/e0**2)*sigDx*sigDy/mDz0
-
+PMLx=[10,10,10,10]
+mHx0,mHx1,mHx2,mHx3,mHy0,mHy1,mHy2,mHy3,mDz0,mDz1,mDz2,mDz4=pml.pmlx(PMLx,L,W,dt)
 #
 #==================PML END
 
@@ -176,7 +119,7 @@ plt.gca().axes.get_yaxis().set_ticks([])  # Turn off y axis ticks
 ims=[]
 Ezs=[]
 #list to contain images for animation
-for t in range(frames) :#iterating function
+for t in range(step) :#iterating function
 
  	CEx=cr.M_Ez_Curl_Ex(Ez,dy)
  	CEy=cr.M_Ez_Curl_Ey(Ez,dx)
@@ -220,7 +163,7 @@ for t in range(frames) :#iterating function
 
 
  	#im=plt.imshow(Ez, origin='lower',animated=True,interpolation="bicubic")
-
+ 	im=plt.imshow(Ez, origin='lower',animated=True,interpolation="bicubic")
 
  	plt.hsv()
  	#ims.append([im])
@@ -247,7 +190,7 @@ def data(i):
 print("Ezs=",np.shape(Ezs))
 
 
-ax=fig.add_subplot(133,projection="3d")
+ax=fig.add_subplot(122,projection="3d")
 
 
 x=range(W)
@@ -258,14 +201,11 @@ xx,yy=np.meshgrid(x,y)
 
 line=ax.plot_surface(xx,yy,Ezs[1][0])
 ax.set_zlim(-1.0,1.0)
-ani=animation.FuncAnimation(fig, data,frames=range(frames),interval=30,repeat_delay=0,blit=False)
+ani=animation.FuncAnimation(fig, data,frames=range(step),interval=30,repeat_delay=0,blit=False)
 #================================
 
 plt.show()
 
-
-
-#
 
 
 
