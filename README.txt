@@ -1,3 +1,9 @@
+All instruction about the files are written on top of the file, therefore no readme. 
+Deprecated has 1D and old 2D trail files
+2D main has modules/classes in other folders
+
+
+
 1. install git
 2. cd to desired folder in command line, enter "git clone (project URL)"
 3. when finish, cd into folder
