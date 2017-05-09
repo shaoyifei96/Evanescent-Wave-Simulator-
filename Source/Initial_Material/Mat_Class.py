@@ -1,9 +1,11 @@
 import numpy as np
+#class for material, it sets up with default values and everytime somthing is added, it 
+#update the values and constants for the material
 class Mat:
 	def __init__(self, row, col, dt):
 		self.e0=1
 		self.mu0=1
-		self.c0=1#wrong number for not explode
+		self.c0=1#this is not used, it was defined outside now
 		self.dt=dt
 		self.row= row
 		self.col= col
@@ -11,7 +13,7 @@ class Mat:
 		self.mu=np.full((row, col),self.mu0)
 		self.M_Ez_Coef_Ex=-self.c0*dt/self.mu
 		self.M_Ez_Coef_Ey=self.c0*dt/self.mu
-		self.M_Ez_Coef_Hz=self.c0*dt#thi is a const indenpendent of material property
+		self.M_Ez_Coef_Hz=self.c0*dt#this is a const indenpendent of material property
 		self.M_Ez_Coef_Dz=1/self.e
 
 
