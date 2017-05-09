@@ -15,6 +15,7 @@ import math as ma
 import numpy as np
 import EH.Curl as cr
 import Initial_Material.Mat_Class as mat
+import Wave_Source.source as src
 import copy as cp
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -26,7 +27,7 @@ from mpl_toolkits.mplot3d import Axes3D#do not delete, important for 3D
 #set up the size of the map
 L=100
 W=100
-frames=3200
+frames=100
 #======parameters=======
 e0=3#initial mateiral epsilon
 e1=1#thinner material to show Evanescant
@@ -60,29 +61,9 @@ Mat_map.add_mat_bond_advanced(function1,matbond_low,matbond_high,e1,mu0)
 Mat_map.add_mat_bond_advanced(function2,matbond_low,matbond_high,e0,mu0)
 
 #======sources of wave=======
-t0=5*tau#
-tprop=1*(L*W)**(1/2)*(dx*dy)**(1/2)/c0
-t=2*t0+3*tprop
-step=int(np.ceil(t/dt))#step is defined so there are 10 propogations
-print('step',step)
-tm.sleep(1)
-print(step)
-t=np.array(range(step-1))*dt
-# print(t)
-
-
-s=dx/2+dt/2
-#+dt/2
-# print(t)
 nx_src=int(np.floor(30))
 ny_src=int(np.floor(30))
-A=-(Mat_map.e[nx_src-1,ny_src-1]/Mat_map.mu[nx_src-1,ny_src-1])**(1/2)
-
-Esrc=[]
-Hsrc=[]
-for i in range(len(t)):  
-    Esrc.append(ma.exp(-((t[i]-t0)/tau)**2))
-    Hsrc.append(A*ma.exp(-((t[i]-t0)/tau+s)**2))
+Esrc,Hsrc=src.Gaus_E_H(nx_src,ny_src,tau,L,W,dx,dy,c0,dt,Mat_map)
 ####################3Source end
 
 #setup, the following code should run once
